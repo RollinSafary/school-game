@@ -1,0 +1,203 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "title": "Ֆիզիկա",
+      "audioUrl": null
+    },
+    {
+      "id": 2,
+      "title": "Կենսաբանություն",
+      "audioUrl": null
+    },
+    {
+      "id": 3,
+      "title": "Քիմիա",
+      "audioUrl": null
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "question": "Ո՞ր մարմնի նկատմամբ է շարժվում շարժվող գնացքի վագոնում սեղանին դրված գիրքը։",
+      "options": [
+        {
+          "title": "Սեղանի;",
+          "description": "vortev",
+          "audioUrl": "/speech/1-1-0.wav"
+        },
+        {
+          "title": "Վագոնի հատակի։",
+          "audioUrl": "/speech/1-1-1.wav"
+        },
+        {
+          "title": "Ռելսերի։",
+          "audioUrl": "/speech/1-1-2.wav"
+        },
+        {
+          "title": "Անշարժ նստած ուղևորի։",
+          "audioUrl": "/speech/1-1-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 2,
+      "audioUrl": "/speech/1-1.wav"
+    },
+    {
+      "id": 2,
+      "categoryId": 1,
+      "question": "Ո՞րոնք են այն երկու ֆիզիկական մեծությունները, որոնք չափվում են նույն միավորներով։",
+      "options": [
+        {
+          "title": "Ուժ և զանգված։",
+          "description": "vortev",
+          "audioUrl": "/speech/1-2-0.wav"
+        },
+        {
+          "title": "Պոտենցիալ էներգիա և ուժի իմպուլս։",
+          "audioUrl": "/speech/1-2-1.wav"
+        },
+        {
+          "title": "Կինետիկ էներգիա և աշխատանք։",
+          "audioUrl": "/speech/1-2-2.wav"
+        },
+        {
+          "title": "Ուժ և աշխատանք։",
+          "audioUrl": "/speech/1-2-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 2,
+      "audioUrl": "/speech/1-2.wav"
+    },
+    {
+      "id": 3,
+      "categoryId": 1,
+      "question": "Ի՞նչ եղանակով կկարողանա մարդը գետնին գործադրած իր ճնշումը մեծացնել 2 անգամ։",
+      "options": [
+        {
+          "title": "Պառկելով գետնին։",
+          "description": "vortev",
+          "audioUrl": "/speech/1-3-0.wav"
+        },
+        {
+          "title": "Կանգնելով մեկ ոտքի վրա։",
+          "audioUrl": "/speech/1-3-1.wav"
+        },
+        {
+          "title": "Նստելով գետնին։",
+          "audioUrl": "/speech/1-3-2.wav"
+        },
+        {
+          "title": "Մարդու գործադրած ճնշումը բոլոր դեպքերում նույնն է։",
+          "audioUrl": "/speech/1-3-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 1,
+      "audioUrl": "/speech/1-3.wav"
+    },
+    {
+      "id": 4,
+      "categoryId": 1,
+      "question": "Ո՞ր դեպքում է մեծանում մարմնի ներքին էներգիան։",
+      "options": [
+        {
+          "title": "Մարմինը բարձրացնում են 2 մ-ով։",
+          "description": "vortev",
+          "audioUrl": "/speech/1-4-0.wav"
+        },
+        {
+          "title": "Մարմինը տաքացնում են 2°c-ով։",
+          "audioUrl": "/speech/1-4-1.wav"
+        },
+        {
+          "title": "Մարմնի արագությունը մեծացնում են 2մ/վ-ով։",
+          "audioUrl": "/speech/1-4-2.wav"
+        },
+        {
+          "title": "Բոլոր դեպքերում մեծանում է։",
+          "audioUrl": "/speech/1-4-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 1,
+      "audioUrl": "/speech/1-4.wav"
+    },
+    {
+      "id": 5,
+      "categoryId": 1,
+      "question": "Ինչպե՞ս է փոխվում շղթայի տեղամասի ընդհանուր դիմադրությունը նրան ևս մեկ դիմադրություն զուգահեռ միացնելիս։",
+      "options": [
+        {
+          "title": "Մեծանում է։",
+          "description": "vortev",
+          "audioUrl": "/speech/1-5-0.wav"
+        },
+        {
+          "title": "Չի փոխվուն։",
+          "audioUrl": "/speech/1-5-1.wav"
+        },
+        {
+          "title": "Փոքրանում է։",
+          "audioUrl": "/speech/1-5-2.wav"
+        },
+        {
+          "title": "Հնարավոր է մեծանա կամ փոքրանա։",
+          "audioUrl": "/speech/1-5-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 2,
+      "audioUrl": "/speech/1-5.wav"
+    },
+    {
+      "id": 6,
+      "categoryId": 1,
+      "question": "Ինչպե՞ս է փոխվում ծառի ստվերի երկարությունը արևոտ օրվա ընթացքում։",
+      "options": [
+        {
+          "title": "Նույնն է ամբողջ օրվա ընթացքում։",
+          "description": "vortev",
+          "audioUrl": "/speech/1-6-0.wav"
+        },
+        {
+          "title": "Ամենակարճն է, երբ Արեգակը հորիզոնից ամենաբարձր կետում է։",
+          "audioUrl": "/speech/1-6-1.wav"
+        },
+        {
+          "title": "Ամենակարճն է, երբ Արեգակը ծագում է, և ամենաերկարն է, երբ մայր է մտնում։",
+          "audioUrl": "/speech/1-6-2.wav"
+        },
+        {
+          "title": "Ամենաերկարն է, երբ Արեգակը ծագում է, և ամենակարճն է, երբ մայր է մտնում։",
+          "audioUrl": "/speech/1-6-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 1,
+      "audioUrl": "/speech/1-6.wav"
+    },
+    {
+      "id": 7,
+      "categoryId": 1,
+      "question": "Ստորև թվարկված էլեկտրամագնիսական ճառագայթումները դասավորեք ըստ ալիքի երկարության աճի՝ 1․ռենտգենյան ճառագայթում, 2․ենթակարմիր ճառագայթում, 3․ռադիոալիքներ։",
+      "options": [
+        {
+          "title": "1,3,2։",
+          "description": "vortev",
+          "audioUrl": "/speech/1-7-0.wav"
+        },
+        {
+          "title": "2,1,3։",
+          "audioUrl": "/speech/1-7-1.wav"
+        },
+        {
+          "title": "3,2,1։",
+          "audioUrl": "/speech/1-7-2.wav"
+        },
+        {
+          "title": "1,2,3։",
+          "audioUrl": "/speech/1-7-3.wav"
+        }
+      ],
+      "rightAnswerIndex": 2,
+      "audioUrl": "/speech/1-7.wav"
+    }
+  ]
+}
