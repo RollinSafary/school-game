@@ -1,12 +1,5 @@
-import realQuestionsData from "../data/questions.json";
-import testQuestionsData from "../data/test-questions.json";
-import { Question, QuestionsData, Category } from "../types/questions";
-
-// Set this to true to use test questions with only 2 questions
-const USE_TEST_QUESTIONS = true;
-export const questionsData = USE_TEST_QUESTIONS
-  ? testQuestionsData
-  : realQuestionsData;
+import questionsData from "../data/questions.json";
+import { Question } from "../types/questions";
 
 // Shuffle array using Fisher-Yates algorithm
 const shuffleArray = <T>(array: T[]): T[] => {

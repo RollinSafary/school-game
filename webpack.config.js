@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
-    publicPath: "./",
+    publicPath: "/",
     clean: true,
   },
   module: {
@@ -70,9 +70,15 @@ module.exports = {
     compress: true,
     port: 3000,
     hot: true,
+    liveReload: true,
     historyApiFallback: true,
+    client: {
+      overlay: true,
+      progress: true,
+    },
+    watchFiles: ["src/**/*"],
   },
-  devtool: "source-map",
+  devtool: "eval-source-map",
   optimization: {
     minimize: process.env.NODE_ENV === "production",
   },

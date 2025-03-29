@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useGame } from "../context/GameContext";
-import { questionsData } from "../utils/questions";
+import { getAllCategories } from "../utils/questions";
+import { Question } from "../types/questions";
 
 const ListContainer = styled.div`
   display: flex;
@@ -305,9 +306,9 @@ const QuestionList: React.FC = () => {
     }
   }, [currentQuestion, showingAnswer]);
 
-  const getCategoryTitle = (categoryId: number) => {
-    const category = questionsData.categories.find((c) => c.id === categoryId);
-    return category ? category.title : "";
+  const getCategoryTitle = (categoryId: number): string => {
+    const category = getAllCategories().find((c) => c.id === categoryId);
+    return category?.title || "";
   };
 
   const handleOptionSelect = (optionIndex: number) => {

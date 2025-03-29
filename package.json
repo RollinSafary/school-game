@@ -11,7 +11,7 @@
     "styled-components": "^6.1.8"
   },
   "scripts": {
-    "start": "webpack serve --mode development",
+    "start": "cross-env NODE_ENV=development webpack serve --mode development",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1",
     "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
