@@ -1,7 +1,7 @@
 export interface Option {
+  id: number;
   title: string;
   description?: string;
-  audioUrl: string;
 }
 
 export interface Question {
@@ -10,13 +10,11 @@ export interface Question {
   question: string;
   options: Option[];
   rightAnswerIndex: number;
-  audioUrl: string;
 }
 
 export interface Category {
   id: number;
   title: string;
-  audioUrl: string;
 }
 
 export interface QuestionsData {

@@ -12,6 +12,7 @@ interface GameState {
   team2Answer: number | null;
   isGameActive: boolean;
   timer: number;
+  timerActive: boolean;
   usedQuestions: Set<number>;
   questionSelections: Map<number, 1 | 2>;
 }
@@ -23,7 +24,8 @@ type GameAction =
   | { type: "CHECK_ANSWERS" }
   | { type: "NEXT_QUESTION" }
   | { type: "END_GAME" }
-  | { type: "TICK_TIMER" };
+  | { type: "TICK_TIMER" }
+  | { type: "START_TIMER" };
 
 const initialState: GameState = {
   questions: [],
@@ -35,6 +37,7 @@ const initialState: GameState = {
   team2Answer: null,
   isGameActive: false,
   timer: 60,
+  timerActive: false,
   usedQuestions: new Set<number>(),
   questionSelections: new Map<number, 1 | 2>(),
 };
@@ -67,10 +70,17 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         team1Answer: null,
         team2Answer: null,
         timer: 60,
+        timerActive: false,
         usedQuestions: newUsedQuestions,
         questionSelections: newQuestionSelections,
       };
     }
+
+    case "START_TIMER":
+      return {
+        ...state,
+        timerActive: true,
+      };
 
     case "SET_TEAM_ANSWER":
       return {
@@ -100,6 +110,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         team1Answer: null,
         team2Answer: null,
         timer: 60,
+        timerActive: false,
       };
 
     case "END_GAME":
@@ -111,7 +122,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
     case "TICK_TIMER":
       return {
         ...state,
-        timer: Math.max(0, state.timer - 1),
+        timer: state.timer > 0 ? state.timer - 1 : 0,
       };
 
     default:
@@ -134,7 +145,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     let timerInterval: NodeJS.Timeout;
 
-    if (state.isGameActive && state.currentQuestion && state.timer > 0) {
+    if (
+      state.isGameActive &&
+      state.currentQuestion &&
+      state.timer > 0 &&
+      state.timerActive
+    ) {
       timerInterval = setInterval(() => {
         dispatch({ type: "TICK_TIMER" });
       }, 1000);
@@ -150,7 +166,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         clearInterval(timerInterval);
       }
     };
-  }, [state.isGameActive, state.currentQuestion, state.timer]);
+  }, [
+    state.isGameActive,
+    state.currentQuestion,
+    state.timer,
+    state.timerActive,
+  ]);
 
   return (
     <GameContext.Provider value={{ state, dispatch }}>

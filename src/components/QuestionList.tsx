@@ -290,21 +290,15 @@ const QuestionList: React.FC = () => {
 
   // Handle waiting audio playback
   React.useEffect(() => {
-    if (currentQuestion && !showingAnswer) {
-      // Create and start waiting audio
-      const audio = new Audio("/music/waiting.mp3");
-      audio.loop = true; // Make it loop continuously
-      audio.play().catch(console.error);
-      setWaitingAudio(audio);
-
-      // Cleanup function to stop audio when component unmounts or question changes
-      return () => {
-        audio.pause();
-        audio.currentTime = 0;
+    // Don't auto-start the waiting audio - it will be started after options audio finishes
+    return () => {
+      if (waitingAudio) {
+        waitingAudio.pause();
+        waitingAudio.currentTime = 0;
         setWaitingAudio(null);
-      };
-    }
-  }, [currentQuestion, showingAnswer]);
+      }
+    };
+  }, [waitingAudio]);
 
   const getCategoryTitle = (categoryId: number): string => {
     const category = getAllCategories().find((c) => c.id === categoryId);
@@ -342,6 +336,55 @@ const QuestionList: React.FC = () => {
     }
   }, [team1Answer, team2Answer, state.timer]);
 
+  // Play question and option audios when question is displayed
+  React.useEffect(() => {
+    if (currentQuestion && !showingAnswer) {
+      const playQuestionAudio = async () => {
+        try {
+          // Play question audio using the question id and category
+          const questionAudioPath = `/speech/question-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+          const questionAudio = new Audio(questionAudioPath);
+          await new Promise<void>((resolve) => {
+            questionAudio.onended = () => resolve();
+            questionAudio.onerror = () => resolve();
+            questionAudio.play().catch(() => resolve());
+          });
+
+          // Wait a bit between audio files for better user experience
+          await new Promise((resolve) => setTimeout(resolve, 300));
+
+          // Play combined options audio (all options announced together)
+          const optionsAudioPath = `/speech/options-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+          const optionsAudio = new Audio(optionsAudioPath);
+          await new Promise<void>((resolve) => {
+            optionsAudio.onended = () => resolve();
+            optionsAudio.onerror = () => resolve();
+            optionsAudio.play().catch(() => resolve());
+          });
+
+          // Start waiting audio and timer ONLY after options audio has finished
+          if (!showingAnswer) {
+            const audio = new Audio("/music/waiting.mp3");
+            audio.loop = true; // Make it loop continuously
+            audio.play().catch(console.error);
+            setWaitingAudio(audio);
+
+            // Start the timer by dispatching an action
+            dispatch({ type: "START_TIMER" });
+          }
+        } catch (error) {
+          console.log("Question audio playback error:", error);
+          // Ensure timer starts even if audio fails
+          if (!showingAnswer) {
+            dispatch({ type: "START_TIMER" });
+          }
+        }
+      };
+
+      playQuestionAudio();
+    }
+  }, [currentQuestion, showingAnswer, dispatch]);
+
   // Play audio sequence and handle answer reveal
   const playAnswerSequence = async () => {
     if (!currentQuestion) return;
@@ -356,10 +399,47 @@ const QuestionList: React.FC = () => {
     setShowingAnswer(true);
     setReadyToShowAnswer(false);
 
-    // Wait for 1 second to show the right answer
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Play the correct answer audio FIRST
+    const rightAnswerAudioPath = `/speech/right-answer-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+    const rightAnswerAudio = new Audio(rightAnswerAudioPath);
+    try {
+      await new Promise<void>((resolve) => {
+        rightAnswerAudio.onended = () => resolve();
+        rightAnswerAudio.onerror = () => resolve();
+        rightAnswerAudio.play().catch(() => resolve());
+      });
+    } catch (error) {
+      console.log("Right answer audio playback error:", error);
+    }
 
-    // Update scores and move to next question
+    // Determine which teams answered correctly
+    const isTeam1Correct = team1Answer === currentQuestion.rightAnswerIndex;
+    const isTeam2Correct = team2Answer === currentQuestion.rightAnswerIndex;
+
+    // Play the appropriate team success/fail audio AFTER right answer
+    let teamResultAudioPath = "";
+    if (isTeam1Correct && isTeam2Correct) {
+      teamResultAudioPath = "/speech/both-success.wav";
+    } else if (isTeam1Correct) {
+      teamResultAudioPath = "/speech/team-1-success.wav";
+    } else if (isTeam2Correct) {
+      teamResultAudioPath = "/speech/team-2-success.wav";
+    } else {
+      teamResultAudioPath = "/speech/both-fail.wav";
+    }
+
+    try {
+      const teamResultAudio = new Audio(teamResultAudioPath);
+      await new Promise<void>((resolve) => {
+        teamResultAudio.onended = () => resolve();
+        teamResultAudio.onerror = () => resolve();
+        teamResultAudio.play().catch(() => resolve());
+      });
+    } catch (error) {
+      console.log("Team result audio playback error:", error);
+    }
+
+    // Update scores
     dispatch({ type: "CHECK_ANSWERS" });
 
     // Wait a bit before moving to the next question
@@ -371,52 +451,9 @@ const QuestionList: React.FC = () => {
     // Switch to the other team for next question selection
     setSelectingTeam((prev) => (prev === 1 ? 2 : 1));
 
-    // Move to the next question state
+    // Move to the question list by dispatching NEXT_QUESTION
     dispatch({ type: "NEXT_QUESTION" });
   };
-
-  // Play question and option audios when question is displayed
-  React.useEffect(() => {
-    if (currentQuestion && !showingAnswer) {
-      const playQuestionAudio = async () => {
-        try {
-          // Play category audio if exists
-          if (currentQuestion.audioUrl) {
-            const questionAudio = new Audio(currentQuestion.audioUrl);
-            await new Promise<void>((resolve) => {
-              questionAudio.onended = () => resolve();
-              questionAudio.onerror = () => resolve();
-              questionAudio.play().catch(() => resolve());
-            });
-          }
-
-          // Play general options audio
-          const optionsAudio = new Audio("/speech/options.wav");
-          await new Promise<void>((resolve) => {
-            optionsAudio.onended = () => resolve();
-            optionsAudio.onerror = () => resolve();
-            optionsAudio.play().catch(() => resolve());
-          });
-
-          // Play option audios if they exist
-          for (const option of currentQuestion.options) {
-            if (option.audioUrl) {
-              const optionAudio = new Audio(option.audioUrl);
-              await new Promise<void>((resolve) => {
-                optionAudio.onended = () => resolve();
-                optionAudio.onerror = () => resolve();
-                optionAudio.play().catch(() => resolve());
-              });
-            }
-          }
-        } catch (error) {
-          console.log("Question audio playback error:", error);
-        }
-      };
-
-      playQuestionAudio();
-    }
-  }, [currentQuestion, showingAnswer]);
 
   // Show question grid only when no question is selected
   const shouldShowQuestionGrid = currentQuestionIndex === -1;
@@ -435,10 +472,10 @@ const QuestionList: React.FC = () => {
       const playFinalAudio = async () => {
         try {
           if (team1Score > team2Score) {
-            const audio = new Audio("/speech/team1-wins.wav");
+            const audio = new Audio("/speech/team-1-wins.wav");
             await audio.play();
           } else if (team2Score > team1Score) {
-            const audio = new Audio("/speech/team2-wins.wav");
+            const audio = new Audio("/speech/team-2-wins.wav");
             await audio.play();
           } else {
             const audio = new Audio("/speech/draw.wav");

@@ -93,9 +93,9 @@ const TeamButton = styled.button.withConfig({
 `;
 
 interface Option {
+  id: number;
   title: string;
   description?: string;
-  audioUrl: string;
 }
 
 const QuestionDisplay: React.FC = () => {
@@ -118,30 +118,41 @@ const QuestionDisplay: React.FC = () => {
           categoryAudio.play().catch(() => resolve()); // Catch and continue if play fails
         });
 
+        // Wait a bit between audio files for better user experience
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
         // Play question audio
-        const questionAudio = new Audio(currentQuestion.audioUrl);
+        const questionAudioPath = `/speech/question-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+        const questionAudio = new Audio(questionAudioPath);
         await new Promise<void>((resolve) => {
           questionAudio.onended = () => resolve();
           questionAudio.onerror = () => resolve();
           questionAudio.play().catch(() => resolve());
         });
 
-        // Play options audio sequentially
-        for (const option of currentQuestion.options) {
-          const optionAudio = new Audio(option.audioUrl);
-          await new Promise<void>((resolve) => {
-            optionAudio.onended = () => resolve();
-            optionAudio.onerror = () => resolve();
-            optionAudio.play().catch(() => resolve());
-          });
-        }
+        // Wait a bit between audio files for better user experience
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // Play combined options audio (all options announced together)
+        const optionsAudioPath = `/speech/options-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+        const optionsAudio = new Audio(optionsAudioPath);
+        await new Promise<void>((resolve) => {
+          optionsAudio.onended = () => resolve();
+          optionsAudio.onerror = () => resolve();
+          optionsAudio.play().catch(() => resolve());
+        });
+
+        // Start timer after all audio has played
+        dispatch({ type: "START_TIMER" });
       } catch (error) {
         console.log("Audio playback error:", error);
+        // Ensure timer starts even if audio fails
+        dispatch({ type: "START_TIMER" });
       }
     };
 
     playAudioSequence();
-  }, [currentQuestion]);
+  }, [currentQuestion, dispatch]);
 
   const handleOptionSelect = (optionIndex: number) => {
     dispatch({

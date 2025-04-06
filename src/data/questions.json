@@ -2,18 +2,15 @@
   "categories": [
     {
       "id": 1,
-      "title": "Ֆիզիկա",
-      "audioUrl": "/speech/category-1.wav"
+      "title": "Ֆիզիկա"
     },
     {
       "id": 2,
-      "title": "Կենսաբանություն",
-      "audioUrl": "/speech/category-2.wav"
+      "title": "Կենսաբանություն"
     },
     {
       "id": 3,
-      "title": "Քիմիա",
-      "audioUrl": "/speech/category-3.wav"
+      "title": "Քիմիա"
     }
   ],
   "questions": [
@@ -22,182 +19,96 @@
       "categoryId": 1,
       "question": "Ո՞ր մարմնի նկատմամբ է շարժվում շարժվող գնացքի վագոնում սեղանին դրված գիրքը։",
       "options": [
-        {
-          "title": "Սեղանի",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-1-0.wav"
-        },
-        {
-          "title": "Վագոնի հատակի",
-          "audioUrl": "/speech/question-option-1-1-1.wav"
-        },
-        {
-          "title": "Ռելսերի",
-          "audioUrl": "/speech/question-option-1-1-2.wav"
-        },
-        {
-          "title": "Անշարժ նստած ուղևորի",
-          "audioUrl": "/speech/question-option-1-1-3.wav"
-        }
+        { "id": 1, "title": "Սեղանի" },
+        { "id": 2, "title": "Վագոնի հատակի" },
+        { "id": 3, "title": "Ռելսերի" },
+        { "id": 4, "title": "Անշարժ նստած ուղևորի" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-1-1.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 2,
       "categoryId": 1,
-      "question": "Ո՞րոնք են այն երկու ֆիզիկական մեծությունները, որոնք չափվում են նույն միավորներով։",
+      "question": "Որո՞նք են այն երկու ֆիզիկական մեծությունները, որոնք չափվում են նույն միավորներով։",
       "options": [
-        {
-          "title": "Ուժ և զանգված",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-2-0.wav"
-        },
-        {
-          "title": "Պոտենցիալ էներգիա և ուժի իմպուլս",
-          "audioUrl": "/speech/question-option-1-2-1.wav"
-        },
-        {
-          "title": "Կինետիկ էներգիա և աշխատանք",
-          "audioUrl": "/speech/question-option-1-2-2.wav"
-        },
-        {
-          "title": "Ուժ և աշխատանք",
-          "audioUrl": "/speech/question-option-1-2-3.wav"
-        }
+        { "id": 1, "title": "Ուժ և զանգված" },
+        { "id": 2, "title": "Պոտենցիալ էներգիա և ուժի իմպուլս" },
+        { "id": 3, "title": "Կինետիկ էներգիա և աշխատանք" },
+        { "id": 4, "title": "Ուժ և աշխատանք" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-1-2.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 3,
       "categoryId": 1,
       "question": "Ի՞նչ եղանակով կկարողանա մարդը գետնին գործադրած իր ճնշումը մեծացնել 2 անգամ։",
       "options": [
+        { "id": 1, "title": "Պառկելով գետնին" },
+        { "id": 2, "title": "Կանգնելով մեկ ոտքի վրա" },
+        { "id": 3, "title": "Նստելով գետնին" },
         {
-          "title": "Պառկելով գետնին",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-3-0.wav"
-        },
-        {
-          "title": "Կանգնելով մեկ ոտքի վրա",
-          "audioUrl": "/speech/question-option-1-3-1.wav"
-        },
-        {
-          "title": "Նստելով գետնին",
-          "audioUrl": "/speech/question-option-1-3-2.wav"
-        },
-        {
-          "title": "Մարդու գործադրած ճնշումը բոլոր դեպքերում նույնն է",
-          "audioUrl": "/speech/question-option-1-3-3.wav"
+          "id": 4,
+          "title": "Մարդու գործադրած ճնշումը բոլոր դեպքերում նույնն է"
         }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-1-3.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 4,
       "categoryId": 1,
       "question": "Ո՞ր դեպքում է մեծանում մարմնի ներքին էներգիան։",
       "options": [
-        {
-          "title": "Մարմինը բարձրացնում են 2 մ-ով",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-4-0.wav"
-        },
-        {
-          "title": "Մարմինը տաքացնում են 2°C-ով",
-          "audioUrl": "/speech/question-option-1-4-1.wav"
-        },
-        {
-          "title": "Մարմնի արագությունը մեծացնում են 2մ/վ-ով",
-          "audioUrl": "/speech/question-option-1-4-2.wav"
-        },
-        {
-          "title": "Բոլոր դեպքերում մեծանում է",
-          "audioUrl": "/speech/question-option-1-4-3.wav"
-        }
+        { "id": 1, "title": "Մարմինը բարձրացնում են 2 մ-ով" },
+        { "id": 2, "title": "Մարմինը տաքացնում են 2°C-ով" },
+        { "id": 3, "title": "Մարմնի արագությունը մեծացնում են 2մ/վ-ով" },
+        { "id": 4, "title": "Բոլոր դեպքերում մեծանում է" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-1-4.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 5,
       "categoryId": 1,
       "question": "Ինչպե՞ս է փոխվում շղթայի տեղամասի ընդհանուր դիմադրությունը նրան ևս մեկ դիմադրություն զուգահեռ միացնելիս։",
       "options": [
-        {
-          "title": "Մեծանում է",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-5-0.wav"
-        },
-        {
-          "title": "Չի փոխվում",
-          "audioUrl": "/speech/question-option-1-5-1.wav"
-        },
-        {
-          "title": "Փոքրանում է",
-          "audioUrl": "/speech/question-option-1-5-2.wav"
-        },
-        {
-          "title": "Հնարավոր է մեծանա կամ փոքրանա",
-          "audioUrl": "/speech/question-option-1-5-3.wav"
-        }
+        { "id": 1, "title": "Մեծանում է" },
+        { "id": 2, "title": "Չի փոխվում" },
+        { "id": 3, "title": "Փոքրանում է" },
+        { "id": 4, "title": "Հնարավոր է մեծանա կամ փոքրանա" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-1-5.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 6,
       "categoryId": 1,
       "question": "Ինչպե՞ս է փոխվում ծառի ստվերի երկարությունը արևոտ օրվա ընթացքում։",
       "options": [
+        { "id": 1, "title": "Նույնն է ամբողջ օրվա ընթացքում" },
         {
-          "title": "Նույնն է ամբողջ օրվա ընթացքում",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-6-0.wav"
+          "id": 2,
+          "title": "Ամենակարճն է, երբ Արեգակը հորիզոնից ամենաբարձր կետում է"
         },
         {
-          "title": "Ամենակարճն է, երբ Արեգակը հորիզոնից ամենաբարձր կետում է",
-          "audioUrl": "/speech/question-option-1-6-1.wav"
+          "id": 3,
+          "title": "Ամենակարճն է, երբ Արեգակը ծագում է և երբ մայր է մտնում"
         },
         {
-          "title": "Ամենակարճն է, երբ Արեգակը ծագում է, և ամենաերկարն է, երբ մայր է մտնում",
-          "audioUrl": "/speech/question-option-1-6-2.wav"
-        },
-        {
-          "title": "Ամենաերկարն է, երբ Արեգակը ծագում է, և ամենակարճն է, երբ մայր է մտնում",
-          "audioUrl": "/speech/question-option-1-6-3.wav"
+          "id": 4,
+          "title": "Ամենաերկարն է, երբ Արեգակը ծագում է, և ամենակարճն է, երբ մայր է մտնում"
         }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-1-6.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 7,
       "categoryId": 1,
       "question": "Ստորև թվարկված էլեկտրամագնիսական ճառագայթումները դասավորեք ըստ ալիքի երկարության աճի՝ 1․ռենտգենյան ճառագայթում, 2․ենթակարմիր ճառագայթում, 3․ռադիոալիքներ։",
       "options": [
-        {
-          "title": "1,3,2",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-7-0.wav"
-        },
-        {
-          "title": "2,1,3",
-          "audioUrl": "/speech/question-option-1-7-1.wav"
-        },
-        {
-          "title": "3,2,1",
-          "audioUrl": "/speech/question-option-1-7-2.wav"
-        },
-        {
-          "title": "1,2,3",
-          "audioUrl": "/speech/question-option-1-7-3.wav"
-        }
+        { "id": 1, "title": "1,3,2" },
+        { "id": 2, "title": "2,1,3" },
+        { "id": 3, "title": "3,2,1" },
+        { "id": 4, "title": "1,2,3" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-1-7.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 8,
@@ -205,571 +116,290 @@
       "question": "Ինչու՞ է խոտը կանաչ։",
       "options": [
         {
-          "title": "Խոտն անդրադարձնում է միայն կանաչ գույնին համապատասխանող լույսի ալիքը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-8-0.wav"
+          "id": 1,
+          "title": "Խոտն անդրադարձնում է միայն կանաչ գույնին համապատասխանող լույսի ալիքը"
         },
         {
-          "title": "Խոտը կլանում է միայն կանաչ գույնին համապատասխանող լույսի ալիքը",
-          "audioUrl": "/speech/question-option-1-8-1.wav"
+          "id": 2,
+          "title": "Խոտը կլանում է միայն կանաչ գույնին համապատասխանող լույսի ալիքը"
         },
         {
-          "title": "Խոտը կլանում է բոլոր գույներին համապատասխանող լույսի ալիքը",
-          "audioUrl": "/speech/question-option-1-8-2.wav"
+          "id": 3,
+          "title": "Խոտը կլանում է բոլոր գույներին համապատասխանող լույսի ալիքը"
         },
         {
-          "title": "Խոտն անդրադարձնում է բոլոր գույներին համապատասխանող լույսի ալիքները",
-          "audioUrl": "/speech/question-option-1-8-3.wav"
+          "id": 4,
+          "title": "Խոտն անդրադարձնում է բոլոր գույներին համապատասխանող լույսի ալիքները"
         }
       ],
-      "rightAnswerIndex": 0,
-      "audioUrl": "/speech/question-1-8.wav"
+      "rightAnswerIndex": 0
     },
     {
       "id": 9,
       "categoryId": 1,
       "question": "Ի՞նչ նշանի լիցք ունի ատոմի միջուկը։",
       "options": [
-        {
-          "title": "Դրական",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-9-0.wav"
-        },
-        {
-          "title": "Բացասական",
-          "audioUrl": "/speech/question-option-1-9-1.wav"
-        },
-        {
-          "title": "Էլեկտրաչեզոք է",
-          "audioUrl": "/speech/question-option-1-9-2.wav"
-        },
-        {
-          "title": "Կունենա տարբեր նշանի լիցքեր",
-          "audioUrl": "/speech/question-option-1-9-3.wav"
-        }
+        { "id": 1, "title": "Դրական" },
+        { "id": 2, "title": "Բացասական" },
+        { "id": 3, "title": "Էլեկտրաչեզոք է" },
+        { "id": 4, "title": "Կունենա տարբեր նշանի լիցքեր" }
       ],
-      "rightAnswerIndex": 0,
-      "audioUrl": "/speech/question-1-9.wav"
+      "rightAnswerIndex": 0
     },
     {
       "id": 10,
       "categoryId": 1,
       "question": "Պատռված տոպրակից կաթ է հոսում։Ի՞նչ տեղի կունենա, եթե տոպրակը բաց թողնենք և այն կատարի ազատ անկում։",
       "options": [
+        { "id": 1, "title": "Կաթը կհոսի ավելի դանդաղ" },
+        { "id": 2, "title": "Կաթը կդադարի հոսել" },
+        { "id": 3, "title": "Կաթը կհոսի ավելի արագ" },
         {
-          "title": "Կաթը կհոսի ավելի դանդաղ",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-1-10-0.wav"
-        },
-        {
-          "title": "Կաթը կդադարի հոսելուց",
-          "audioUrl": "/speech/question-option-1-10-1.wav"
-        },
-        {
-          "title": "Կաթը կհոսի ավելի արագ",
-          "audioUrl": "/speech/question-option-1-10-2.wav"
-        },
-        {
-          "title": "Կաթը կշարունակի հոսել այնպես, ինչպես հոսում էր մինչ անկում կատարելը",
-          "audioUrl": "/speech/question-option-1-10-3.wav"
+          "id": 4,
+          "title": "Կաթը կշարունակի հոսել այնպես, ինչպես հոսում էր մինչ անկում կատարելը"
         }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-1-10.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 1,
       "categoryId": 2,
       "question": "Որտեղի՞ց է սկսվում մարդու այրան շրջանառության մեծ շրջանը։",
       "options": [
-        {
-          "title": "Աջ փորոքից",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-1-0.wav"
-        },
-        {
-          "title": "Ձախ փորոքից",
-          "audioUrl": "/speech/question-option-2-1-1.wav"
-        },
-        {
-          "title": "Աջ նախասրտից",
-          "audioUrl": "/speech/question-option-2-1-2.wav"
-        },
-        {
-          "title": "Ձախ նախասրտից",
-          "audioUrl": "/speech/question-option-2-1-3.wav"
-        }
+        { "id": 1, "title": "Աջ փորոքից" },
+        { "id": 2, "title": "Ձախ փորոքից" },
+        { "id": 3, "title": "Աջ նախասրտից" },
+        { "id": 4, "title": "Ձախ նախասրտից" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-2-1.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 2,
       "categoryId": 2,
       "question": "Մարդու օրգանիզմում որտեղ է սկսվում սպիտակուցների ֆերմենտային ճեղքումը։",
       "options": [
-        {
-          "title": "Հաստ աղիում",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-2-0.wav"
-        },
-        {
-          "title": "Բարակ աղիում",
-          "audioUrl": "/speech/question-option-2-2-1.wav"
-        },
-        {
-          "title": "Բերանի խոռոչում",
-          "audioUrl": "/speech/question-option-2-2-2.wav"
-        },
-        {
-          "title": "Ստամոքսում",
-          "audioUrl": "/speech/question-option-2-2-3.wav"
-        }
+        { "id": 1, "title": "Հաստ աղիում" },
+        { "id": 2, "title": "Բարակ աղիում" },
+        { "id": 3, "title": "Բերանի խոռոչում" },
+        { "id": 4, "title": "Ստամոքսում" }
       ],
-      "rightAnswerIndex": 3,
-      "audioUrl": "/speech/question-2-2.wav"
+      "rightAnswerIndex": 3
     },
     {
       "id": 3,
       "categoryId": 2,
       "question": "Որտե՞ղ է տեղի ունենում ֆոտոսինթեզը(լուսասինթեզը)։",
       "options": [
-        {
-          "title": "Միտոքոնդրիումներում",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-3-0.wav"
-        },
-        {
-          "title": "Քլորոպլաստներում",
-          "audioUrl": "/speech/question-option-2-3-1.wav"
-        },
-        {
-          "title": "Ցենտրիոլներում",
-          "audioUrl": "/speech/question-option-2-3-2.wav"
-        },
-        {
-          "title": "Ռիբոսոմներում",
-          "audioUrl": "/speech/question-option-2-3-3.wav"
-        }
+        { "id": 1, "title": "Միտոքոնդրիումներում" },
+        { "id": 2, "title": "Քլորոպլաստներում" },
+        { "id": 3, "title": "Ցենտրիոլներում" },
+        { "id": 4, "title": "Ռիբոսոմներում" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-2-3.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 4,
       "categoryId": 2,
       "question": "Ի՞նչ է գլյուկոզը։",
       "options": [
-        {
-          "title": "Նուկլեոտիդ",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-4-0.wav"
-        },
-        {
-          "title": "Սպիտակուց",
-          "audioUrl": "/speech/question-option-2-4-1.wav"
-        },
-        {
-          "title": "Ածխաջուր",
-          "audioUrl": "/speech/question-option-2-4-2.wav"
-        },
-        {
-          "title": "Լիպիդ",
-          "audioUrl": "/speech/question-option-2-4-3.wav"
-        }
+        { "id": 1, "title": "Նուկլեոտիդ" },
+        { "id": 2, "title": "Սպիտակուց" },
+        { "id": 3, "title": "Ածխաջուր" },
+        { "id": 4, "title": "Լիպիդ" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-2-4.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 5,
       "categoryId": 2,
       "question": "Ո՞ր օրգանիզմներն են օրգանական նյութերի սինթեզի համար օգտագործում Արեգակի էներգիան։",
       "options": [
-        {
-          "title": "Կանաչ բույսերը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-5-0.wav"
-        },
-        {
-          "title": "Օձերը",
-          "audioUrl": "/speech/question-option-2-5-1.wav"
-        },
-        {
-          "title": "Ճահճային թռչունները",
-          "audioUrl": "/speech/question-option-2-5-2.wav"
-        },
-        {
-          "title": "Գորտերը",
-          "audioUrl": "/speech/question-option-2-5-3.wav"
-        }
+        { "id": 1, "title": "Կանաչ բույսերը" },
+        { "id": 2, "title": "Օձերը" },
+        { "id": 3, "title": "Ճահճային թռչունները" },
+        { "id": 4, "title": "Գորտերը" }
       ],
-      "rightAnswerIndex": 0,
-      "audioUrl": "/speech/question-2-5.wav"
+      "rightAnswerIndex": 0
     },
     {
       "id": 6,
       "categoryId": 2,
       "question": "Որո՞նք են կյանքի ոչ բջջային ձևերը։",
       "options": [
-        {
-          "title": "Սնկերը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-6-0.wav"
-        },
-        {
-          "title": "Բակտերիաները",
-          "audioUrl": "/speech/question-option-2-6-1.wav"
-        },
-        {
-          "title": "Վիրուսները",
-          "audioUrl": "/speech/question-option-2-6-2.wav"
-        },
-        {
-          "title": "Նախակենդանիները",
-          "audioUrl": "/speech/question-option-2-6-3.wav"
-        }
+        { "id": 1, "title": "Սնկերը" },
+        { "id": 2, "title": "Բակտերիաները" },
+        { "id": 3, "title": "Վիրուսները" },
+        { "id": 4, "title": "Նախակենդանիները" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-2-6.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 7,
       "categoryId": 2,
       "question": "Նշվածներից ո՞րն է սեռական բազմացման տարբերակ",
       "options": [
-        {
-          "title": "Բողբոջումը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-7-0.wav"
-        },
-        {
-          "title": "Կուսածնությունը",
-          "audioUrl": "/speech/question-option-2-7-1.wav"
-        },
-        {
-          "title": "Պալարներով բազմացումը",
-          "audioUrl": "/speech/question-option-2-7-2.wav"
-        },
-        {
-          "title": "Բեղիկներով և կոճղարմատներով բազմացումը",
-          "audioUrl": "/speech/question-option-2-7-3.wav"
-        }
+        { "id": 1, "title": "Բողբոջումը" },
+        { "id": 2, "title": "Կուսածնությունը" },
+        { "id": 3, "title": "Պալարներով բազմացումը" },
+        { "id": 4, "title": "Բեղիկներով և կոճղարմատներով բազմացումը" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-2-7.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 8,
       "categoryId": 2,
       "question": "Մարդու ո՞ր հիվանդությունն է բնութագրվում այրան ցածր մակարդելիությամբ։",
       "options": [
-        {
-          "title": "Դալտոնիզմը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-8-0.wav"
-        },
-        {
-          "title": "Դաունի համախտանիշը",
-          "audioUrl": "/speech/question-option-2-8-1.wav"
-        },
-        {
-          "title": "Հեմոֆիլիան",
-          "audioUrl": "/speech/question-option-2-8-2.wav"
-        },
-        {
-          "title": "Բրախիդակտիլիան",
-          "audioUrl": "/speech/question-option-2-8-3.wav"
-        }
+        { "id": 1, "title": "Դալտոնիզմը" },
+        { "id": 2, "title": "Դաունի համախտանիշը" },
+        { "id": 3, "title": "Հեմոֆիլիան" },
+        { "id": 4, "title": "Բրախիդակտիլիան" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-2-8.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 9,
       "categoryId": 2,
       "question": "Մարդու ո՞ր հատկանիշը չի կարող փոփոխվել կախված արտաքին պայմանների ազդեցությունից։",
       "options": [
-        {
-          "title": "Այրան խումբը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-9-0.wav"
-        },
-        {
-          "title": "Մարմնի զանգվածը",
-          "audioUrl": "/speech/question-option-2-9-1.wav"
-        },
-        {
-          "title": "Աշխատանքային հմտությունը",
-          "audioUrl": "/speech/question-option-2-9-2.wav"
-        },
-        {
-          "title": "Ֆիզիկական պատրաստվածությունը",
-          "audioUrl": "/speech/question-option-2-9-3.wav"
-        }
+        { "id": 1, "title": "Այրան խումբը" },
+        { "id": 2, "title": "Մարմնի զանգվածը" },
+        { "id": 3, "title": "Աշխատանքային հմտությունը" },
+        { "id": 4, "title": "Ֆիզիկական պատրաստվածությունը" }
       ],
-      "rightAnswerIndex": 0,
-      "audioUrl": "/speech/question-2-9.wav"
+      "rightAnswerIndex": 0
     },
     {
       "id": 10,
       "categoryId": 2,
       "question": "Ո՞րն է կենսածին էկոլոգիական գործոն։",
       "options": [
-        {
-          "title": "Քամին",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-2-10-0.wav"
-        },
-        {
-          "title": "Օրվա տևողությունը",
-          "audioUrl": "/speech/question-option-2-10-1.wav"
-        },
-        {
-          "title": "Մթնոլորտային ճնշումը",
-          "audioUrl": "/speech/question-option-2-10-2.wav"
-        },
-        {
-          "title": "Գիշատչությունը",
-          "audioUrl": "/speech/question-option-2-10-3.wav"
-        }
+        { "id": 1, "title": "Քամին" },
+        { "id": 2, "title": "Օրվա տևողությունը" },
+        { "id": 3, "title": "Մթնոլորտային ճնշումը" },
+        { "id": 4, "title": "Գիշատչությունը" }
       ],
-      "rightAnswerIndex": 3,
-      "audioUrl": "/speech/question-2-10.wav"
+      "rightAnswerIndex": 3
     },
     {
       "id": 1,
       "categoryId": 3,
       "question": "Կենցաղում օգտագործվող ո՞ր նյութի միջոցով է հնարավոր միմյանցից տարբերել սոդայի և շաքարավազի սպիտակ փոշիները։",
       "options": [
-        {
-          "title": "Ձիթայուղ",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-1-0.wav"
-        },
-        {
-          "title": "Աղ",
-          "audioUrl": "/speech/question-option-3-1-1.wav"
-        },
-        {
-          "title": "Քացախ",
-          "audioUrl": "/speech/question-option-3-1-2.wav"
-        },
-        {
-          "title": "Ջուր",
-          "audioUrl": "/speech/question-option-3-1-3.wav"
-        }
+        { "id": 1, "title": "Ձիթայուղ" },
+        { "id": 2, "title": "Աղ" },
+        { "id": 3, "title": "Քացախ" },
+        { "id": 4, "title": "Ջուր" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-3-1.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 2,
       "categoryId": 3,
-      "question": "Քանի՞տարրերի ատոմներից է կազմված կավիճը, եթե հայտնի է որ, այն շիկացնելիս առաջանում է կալցիումի օքսիդ և ածխաթթու գազ։",
+      "question": "Քանի՞ տարրերի ատոմներից է կազմված կավիճը, եթե հայտնի է որ, այն շիկացնելիս առաջանում է կալցիումի օքսիդ և ածխաթթու գազ։",
       "options": [
-        {
-          "title": "2",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-2-0.wav"
-        },
-        {
-          "title": "3",
-          "audioUrl": "/speech/question-option-3-2-1.wav"
-        },
-        {
-          "title": "4",
-          "audioUrl": "/speech/question-option-3-2-2.wav"
-        },
-        {
-          "title": "5",
-          "audioUrl": "/speech/question-option-3-2-3.wav"
-        }
+        { "id": 1, "title": "2" },
+        { "id": 2, "title": "3" },
+        { "id": 3, "title": "4" },
+        { "id": 4, "title": "5" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-3-2.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 3,
       "categoryId": 3,
       "question": "Ո՞ր տարրն է գերակշռում տիեզերքում։",
       "options": [
-        {
-          "title": "Ջրածին",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-3-0.wav"
-        },
-        {
-          "title": "Թթվածին",
-          "audioUrl": "/speech/question-option-3-3-1.wav"
-        },
-        {
-          "title": "Ածխածին",
-          "audioUrl": "/speech/question-option-3-3-2.wav"
-        },
-        {
-          "title": "Կալցիում",
-          "audioUrl": "/speech/question-option-3-3-3.wav"
-        }
+        { "id": 1, "title": "Ջրածին" },
+        { "id": 2, "title": "Թթվածին" },
+        { "id": 3, "title": "Ածխածին" },
+        { "id": 4, "title": "Կալցիում" }
       ],
-      "rightAnswerIndex": 0,
-      "audioUrl": "/speech/question-3-3.wav"
+      "rightAnswerIndex": 0
     },
     {
       "id": 4,
       "categoryId": 3,
       "question": "Թվարկվածներից ո՞րն է քիմիական միացություն։",
       "options": [
-        {
-          "title": "Օդը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-4-0.wav"
-        },
-        {
-          "title": "Օղին",
-          "audioUrl": "/speech/question-option-3-4-1.wav"
-        },
-        {
-          "title": "Էթանոլը",
-          "audioUrl": "/speech/question-option-3-4-2.wav"
-        },
-        {
-          "title": "Գարեջուրը",
-          "audioUrl": "/speech/question-option-3-4-3.wav"
-        }
+        { "id": 1, "title": "Օդը" },
+        { "id": 2, "title": "Օղին" },
+        { "id": 3, "title": "Էթանոլը" },
+        { "id": 4, "title": "Գարեջուրը" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-3-4.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 5,
       "categoryId": 3,
       "question": "Որի՞ համար քիմիական բանաձև չի կարող գրվել։",
       "options": [
-        {
-          "title": "Գլյուկոզի",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-5-0.wav"
-        },
-        {
-          "title": "Օդի",
-          "audioUrl": "/speech/question-option-3-5-1.wav"
-        },
-        {
-          "title": "Սախարոզի",
-          "audioUrl": "/speech/question-option-3-5-2.wav"
-        },
-        {
-          "title": "Սոդայի",
-          "audioUrl": "/speech/question-option-3-5-3.wav"
-        }
+        { "id": 1, "title": "Գլյուկոզի" },
+        { "id": 2, "title": "Օդի" },
+        { "id": 3, "title": "Սախարոզի" },
+        { "id": 4, "title": "Սոդայի" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-3-5.wav"
+      "rightAnswerIndex": 1
     },
     {
       "id": 6,
       "categoryId": 3,
       "question": "Ո՞րն է բարդ նյութ։",
       "options": [
-        {
-          "title": "Ալմաստը",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-6-0.wav"
-        },
-        {
-          "title": "Ոսկին",
-          "audioUrl": "/speech/question-option-3-6-1.wav"
-        },
-        {
-          "title": "Գրաֆիտը",
-          "audioUrl": "/speech/question-option-3-6-2.wav"
-        },
-        {
-          "title": "Էթանոլը",
-          "audioUrl": "/speech/question-option-3-6-3.wav"
-        }
+        { "id": 1, "title": "Ալմաստը" },
+        { "id": 2, "title": "Ոսկին" },
+        { "id": 3, "title": "Գրաֆիտը" },
+        { "id": 4, "title": "Էթանոլը" }
       ],
-      "rightAnswerIndex": 3,
-      "audioUrl": "/speech/question-3-6.wav"
+      "rightAnswerIndex": 3
     },
     {
       "id": 7,
       "categoryId": 3,
       "question": "Ձյան փաթիլում ո՞ր քիմիական տարրի զանգվածային բաժինն է առավել մեծ։",
       "options": [
-        {
-          "title": "Թթվածին",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-7-0.wav"
-        },
-        {
-          "title": "Ջրածին",
-          "audioUrl": "/speech/question-option-3-7-1.wav"
-        },
-        {
-          "title": "Ազոտ",
-          "audioUrl": "/speech/question-option-3-7-2.wav"
-        },
-        {
-          "title": "Ծծումբ",
-          "audioUrl": "/speech/question-option-3-7-3.wav"
-        }
+        { "id": 1, "title": "Թթվածին" },
+        { "id": 2, "title": "Ջրածին" },
+        { "id": 3, "title": "Ազոտ" },
+        { "id": 4, "title": "Ծծումբ" }
       ],
-      "rightAnswerIndex": 0,
-      "audioUrl": "/speech/question-3-7.wav"
+      "rightAnswerIndex": 0
     },
     {
       "id": 8,
       "categoryId": 3,
       "question": "Հետևյալ մետաղներից ո՞րն է բնության մեջ հանդիպում պարզ նյութի ձևով։",
       "options": [
-        {
-          "title": "Նատրիում",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-8-0.wav"
-        },
-        {
-          "title": "Ալյումին",
-          "audioUrl": "/speech/question-option-3-8-1.wav"
-        },
-        {
-          "title": "Ոսկի",
-          "audioUrl": "/speech/question-option-3-8-2.wav"
-        },
-        {
-          "title": "Կալցիում",
-          "audioUrl": "/speech/question-option-3-8-3.wav"
-        }
+        { "id": 1, "title": "Նատրիում" },
+        { "id": 2, "title": "Ալյումին" },
+        { "id": 3, "title": "Ոսկի" },
+        { "id": 4, "title": "Կալցիում" }
       ],
-      "rightAnswerIndex": 2,
-      "audioUrl": "/speech/question-3-8.wav"
+      "rightAnswerIndex": 2
     },
     {
       "id": 9,
       "categoryId": 3,
       "question": "Ո՞րն է բնական խառնուրդ։",
       "options": [
-        {
-          "title": "Բետոն",
-          "description": "vortev",
-          "audioUrl": "/speech/question-option-3-9-0.wav"
-        },
-        {
-          "title": "Օդ",
-          "audioUrl": "/speech/question-option-3-9-1.wav"
-        },
-        {
-          "title": "Յոդի թուրմ",
-          "audioUrl": "/speech/question-option-3-9-2.wav"
-        },
-        {
-          "title": "Օղի",
-          "audioUrl": "/speech/question-option-3-9-3.wav"
-        }
+        { "id": 1, "title": "Բետոն" },
+        { "id": 2, "title": "Օդ" },
+        { "id": 3, "title": "Յոդի թուրմ" },
+        { "id": 4, "title": "Օղի" }
       ],
-      "rightAnswerIndex": 1,
-      "audioUrl": "/speech/question-3-9.wav"
+      "rightAnswerIndex": 1
+    },
+    {
+      "id": 10,
+      "categoryId": 3,
+      "question": "Ո՞րն է ֆիզիկական մարմին",
+      "options": [
+        { "id": 1, "title": "Մեխ" },
+        { "id": 2, "title": "Պղինձ" },
+        { "id": 3, "title": "Երկաթ" },
+        { "id": 4, "title": "Արծաթ" }
+      ],
+      "rightAnswerIndex": 0
     }
   ]
 }
