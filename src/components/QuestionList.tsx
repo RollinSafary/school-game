@@ -287,18 +287,24 @@ const QuestionList: React.FC = () => {
   );
   const [waitingAudio, setWaitingAudio] =
     React.useState<HTMLAudioElement | null>(null);
+  const [isOptionsAudioFinished, setIsOptionsAudioFinished] =
+    React.useState(false);
 
-  // Handle waiting audio playback
-  React.useEffect(() => {
-    // Don't auto-start the waiting audio - it will be started after options audio finishes
-    return () => {
-      if (waitingAudio) {
-        waitingAudio.pause();
-        waitingAudio.currentTime = 0;
-        setWaitingAudio(null);
-      }
-    };
+  // Handle waiting audio playback and cleanup
+  const stopBackgroundMusic = React.useCallback(() => {
+    if (waitingAudio) {
+      waitingAudio.pause();
+      waitingAudio.currentTime = 0;
+      setWaitingAudio(null);
+    }
   }, [waitingAudio]);
+
+  // Cleanup audio when component unmounts
+  React.useEffect(() => {
+    return () => {
+      stopBackgroundMusic();
+    };
+  }, [stopBackgroundMusic]);
 
   const getCategoryTitle = (categoryId: number): string => {
     const category = getAllCategories().find((c) => c.id === categoryId);
@@ -336,9 +342,19 @@ const QuestionList: React.FC = () => {
     }
   }, [team1Answer, team2Answer, state.timer]);
 
+  // Stop background music when returning to question list
+  React.useEffect(() => {
+    if (currentQuestionIndex === -1) {
+      stopBackgroundMusic();
+      setIsOptionsAudioFinished(false);
+    }
+  }, [currentQuestionIndex, stopBackgroundMusic]);
+
   // Play question and option audios when question is displayed
   React.useEffect(() => {
     if (currentQuestion && !showingAnswer) {
+      setIsOptionsAudioFinished(false);
+
       const playQuestionAudio = async () => {
         try {
           // Play question audio using the question id and category
@@ -362,8 +378,16 @@ const QuestionList: React.FC = () => {
             optionsAudio.play().catch(() => resolve());
           });
 
-          // Start waiting audio and timer ONLY after options audio has finished
-          if (!showingAnswer) {
+          // Mark options audio as finished
+          setIsOptionsAudioFinished(true);
+
+          // Only start waiting audio and timer if we're still on this question and no answers yet
+          if (
+            !showingAnswer &&
+            team1Answer === null &&
+            team2Answer === null &&
+            currentQuestionIndex !== -1
+          ) {
             const audio = new Audio("/music/waiting.mp3");
             audio.loop = true; // Make it loop continuously
             audio.play().catch(console.error);
@@ -374,8 +398,16 @@ const QuestionList: React.FC = () => {
           }
         } catch (error) {
           console.log("Question audio playback error:", error);
-          // Ensure timer starts even if audio fails
-          if (!showingAnswer) {
+          // Mark options audio as finished even on error
+          setIsOptionsAudioFinished(true);
+
+          // Ensure timer starts even if audio fails, but only if no answers yet
+          if (
+            !showingAnswer &&
+            team1Answer === null &&
+            team2Answer === null &&
+            currentQuestionIndex !== -1
+          ) {
             dispatch({ type: "START_TIMER" });
           }
         }
@@ -383,18 +415,14 @@ const QuestionList: React.FC = () => {
 
       playQuestionAudio();
     }
-  }, [currentQuestion, showingAnswer, dispatch]);
+  }, [currentQuestion?.id, currentQuestionIndex, showingAnswer, dispatch]);
 
   // Play audio sequence and handle answer reveal
   const playAnswerSequence = async () => {
     if (!currentQuestion) return;
 
     // Stop waiting audio if it's playing
-    if (waitingAudio) {
-      waitingAudio.pause();
-      waitingAudio.currentTime = 0;
-      setWaitingAudio(null);
-    }
+    stopBackgroundMusic();
 
     setShowingAnswer(true);
     setReadyToShowAnswer(false);
