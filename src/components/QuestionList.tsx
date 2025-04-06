@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useGame } from "../context/GameContext";
 import { getAllCategories } from "../utils/questions";
-import { Question } from "../types/questions";
 import { audioManager } from "../utils/AudioManager";
+import { simpleAudioManager } from "../utils/SimplifiedAudioManager";
 
 const ListContainer = styled.div`
   display: flex;
@@ -117,12 +117,14 @@ const Option = styled.button.withConfig({
   }};
   color: #333;
   font-size: 1rem;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
   transition: all 0.3s ease;
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: ${(props) => (props.disabled ? "none" : "translateY(-2px)")};
+    box-shadow: ${(props) =>
+      props.disabled ? "none" : "0 2px 8px rgba(0, 0, 0, 0.1)"};
   }
 `;
 
@@ -290,6 +292,20 @@ const QuestionList: React.FC = () => {
     React.useState<HTMLAudioElement | null>(null);
   const [isOptionsAudioFinished, setIsOptionsAudioFinished] =
     React.useState(false);
+  const [hasPlayedTeamSelectionAudio, setHasPlayedTeamSelectionAudio] =
+    React.useState(false);
+  const [team1AnsweredCorrectly, setTeam1AnsweredCorrectly] = React.useState<
+    boolean | null
+  >(null);
+  const [team2AnsweredCorrectly, setTeam2AnsweredCorrectly] = React.useState<
+    boolean | null
+  >(null);
+
+  // Add a ref that will persist between renders and won't be affected by state updates
+  const correctAnswersRef = React.useRef({
+    team1Correct: null as boolean | null,
+    team2Correct: null as boolean | null,
+  });
 
   // Handle waiting audio playback and cleanup
   const stopBackgroundMusic = React.useCallback(() => {
@@ -336,12 +352,26 @@ const QuestionList: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [readyToShowAnswer, showingAnswer, currentQuestion]);
 
-  // When both teams have answered or timer is complete, set ready to show answer
+  // Modify the useEffect that sets readyToShowAnswer
   React.useEffect(() => {
     if ((team1Answer !== null && team2Answer !== null) || state.timer === 0) {
       setReadyToShowAnswer(true);
+
+      // Calculate correctness immediately and store in the ref
+      if (currentQuestion) {
+        // Store in both state (for rendering) and ref (for audio)
+        const t1Correct = team1Answer === currentQuestion.rightAnswerIndex;
+        const t2Correct = team2Answer === currentQuestion.rightAnswerIndex;
+
+        setTeam1AnsweredCorrectly(t1Correct);
+        setTeam2AnsweredCorrectly(t2Correct);
+
+        // Store in ref which is more durable across async operations
+        correctAnswersRef.current.team1Correct = t1Correct;
+        correctAnswersRef.current.team2Correct = t2Correct;
+      }
     }
-  }, [team1Answer, team2Answer, state.timer]);
+  }, [team1Answer, team2Answer, state.timer, currentQuestion]);
 
   // Stop background music when returning to question list
   React.useEffect(() => {
@@ -401,7 +431,7 @@ const QuestionList: React.FC = () => {
     }
   }, [currentQuestion?.id, currentQuestionIndex, showingAnswer, dispatch]);
 
-  // Play audio sequence and handle answer reveal
+  // Then modify playAnswerSequence to use the ref values
   const playAnswerSequence = async () => {
     if (!currentQuestion) return;
 
@@ -413,42 +443,38 @@ const QuestionList: React.FC = () => {
 
     // Play the correct answer audio FIRST
     const rightAnswerAudioPath = `/speech/right-answer-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
-    const rightAnswerAudio = new Audio(rightAnswerAudioPath);
     try {
-      await new Promise<void>((resolve) => {
-        rightAnswerAudio.onended = () => resolve();
-        rightAnswerAudio.onerror = () => resolve();
-        rightAnswerAudio.play().catch(() => resolve());
-      });
+      await simpleAudioManager.play(rightAnswerAudioPath);
     } catch (error) {
-      console.log("Right answer audio playback error:", error);
+      console.error("Right answer audio playback error:", error);
     }
 
-    // Determine which teams answered correctly
-    const isTeam1Correct = team1Answer === currentQuestion.rightAnswerIndex;
-    const isTeam2Correct = team2Answer === currentQuestion.rightAnswerIndex;
-
-    // Play the appropriate team success/fail audio AFTER right answer
+    // Use the ref values for determining which audio to play
     let teamResultAudioPath = "";
-    if (isTeam1Correct && isTeam2Correct) {
+    const t1Correct = correctAnswersRef.current.team1Correct === true;
+    const t2Correct = correctAnswersRef.current.team2Correct === true;
+
+    // Both teams correct
+    if (t1Correct && t2Correct) {
       teamResultAudioPath = "/speech/both-success.wav";
-    } else if (isTeam1Correct) {
+    }
+    // Only Team 1 correct
+    else if (t1Correct && !t2Correct) {
       teamResultAudioPath = "/speech/team-1-success.wav";
-    } else if (isTeam2Correct) {
+    }
+    // Only Team 2 correct
+    else if (!t1Correct && t2Correct) {
       teamResultAudioPath = "/speech/team-2-success.wav";
-    } else {
+    }
+    // Both teams incorrect
+    else {
       teamResultAudioPath = "/speech/both-fail.wav";
     }
 
     try {
-      const teamResultAudio = new Audio(teamResultAudioPath);
-      await new Promise<void>((resolve) => {
-        teamResultAudio.onended = () => resolve();
-        teamResultAudio.onerror = () => resolve();
-        teamResultAudio.play().catch(() => resolve());
-      });
+      await simpleAudioManager.play(teamResultAudioPath);
     } catch (error) {
-      console.log("Team result audio playback error:", error);
+      console.error("Team result audio playback error:", error);
     }
 
     // Update scores
@@ -459,11 +485,16 @@ const QuestionList: React.FC = () => {
 
     // Reset the state for the next question
     setShowingAnswer(false);
-    setActiveTeam(1); // Reset to team 1 for next question
-    // Switch to the other team for next question selection
+    setActiveTeam(1);
     setSelectingTeam((prev) => (prev === 1 ? 2 : 1));
 
-    // Move to the question list by dispatching NEXT_QUESTION
+    // Reset correctness state and ref
+    setTeam1AnsweredCorrectly(null);
+    setTeam2AnsweredCorrectly(null);
+    correctAnswersRef.current.team1Correct = null;
+    correctAnswersRef.current.team2Correct = null;
+
+    // Move to the question list
     dispatch({ type: "NEXT_QUESTION" });
   };
 
@@ -494,13 +525,62 @@ const QuestionList: React.FC = () => {
             await audio.play();
           }
         } catch (error) {
-          console.log("Final results audio playback error:", error);
+          console.error("Final results audio playback error:", error);
         }
       };
 
       playFinalAudio();
     }
   }, [isGameCompleted, team1Score, team2Score]);
+
+  // Add this effect for team selection audio specifically
+  React.useEffect(() => {
+    // Only play when:
+    // 1. We're in question selection view
+    // 2. Audio hasn't been played yet for this selection
+    // 3. Game isn't completed
+    if (
+      shouldShowQuestionGrid &&
+      !hasPlayedTeamSelectionAudio &&
+      !isGameCompleted
+    ) {
+      const playTeamSelectionAudio = async () => {
+        try {
+          const audioPath = `/speech/select-question-team-${selectingTeam}.wav`;
+
+          // Stop any existing audio first
+          simpleAudioManager.stopAll();
+
+          // Play the new audio and mark as played
+          await simpleAudioManager.play(audioPath);
+          setHasPlayedTeamSelectionAudio(true);
+        } catch (error) {
+          console.error("Team selection audio playback error:", error);
+          // Even if there's an error, mark as played to prevent retries
+          setHasPlayedTeamSelectionAudio(true);
+        }
+      };
+
+      playTeamSelectionAudio();
+    }
+
+    // Reset the flag when we leave question grid view
+    if (!shouldShowQuestionGrid) {
+      setHasPlayedTeamSelectionAudio(false);
+    }
+  }, [
+    shouldShowQuestionGrid,
+    selectingTeam,
+    hasPlayedTeamSelectionAudio,
+    isGameCompleted,
+  ]);
+
+  // Add a cleanup effect to stop audio when unmounting
+  React.useEffect(() => {
+    return () => {
+      simpleAudioManager.stopAll();
+    };
+  }, []);
 
   return (
     <>
@@ -550,13 +630,17 @@ const QuestionList: React.FC = () => {
                         : "#4444FF"
                       : undefined
                   }
-                  onClick={() =>
-                    !usedQuestions.has(index) &&
-                    dispatch({
-                      type: "SELECT_QUESTION",
-                      payload: { index, team: selectingTeam },
-                    })
-                  }
+                  onClick={() => {
+                    if (!usedQuestions.has(index)) {
+                      // Stop any audio playing
+                      simpleAudioManager.stopAll();
+
+                      dispatch({
+                        type: "SELECT_QUESTION",
+                        payload: { index, team: selectingTeam },
+                      });
+                    }
+                  }}
                 >
                   {index + 1}
                 </QuestionButton>
@@ -576,7 +660,7 @@ const QuestionList: React.FC = () => {
               <TeamIndicator>
                 <TeamButton
                   isActive={activeTeam === 1}
-                  teamColor="#FF8000"
+                  teamColor="#FF8C00"
                   onClick={() => setActiveTeam(1)}
                 >
                   Թիմ 1
@@ -589,6 +673,7 @@ const QuestionList: React.FC = () => {
                   Թիմ 2
                 </TeamButton>
               </TeamIndicator>
+
               <OptionsContainer>
                 {currentQuestion.options.map((option, index) => (
                   <Option
@@ -599,29 +684,35 @@ const QuestionList: React.FC = () => {
                       showingAnswer &&
                       index === currentQuestion.rightAnswerIndex
                     }
-                    onClick={() => {
-                      if (showingAnswer) return;
-                      if (activeTeam === 1) {
-                        if (team1Answer === index) {
-                          dispatch({
-                            type: "SET_TEAM_ANSWER",
-                            payload: { team: 1, answer: null },
-                          });
-                        } else if (team1Answer === null) {
-                          handleOptionSelect(index);
-                          setActiveTeam(2);
-                        }
-                      } else if (activeTeam === 2) {
-                        if (team2Answer === index) {
-                          dispatch({
-                            type: "SET_TEAM_ANSWER",
-                            payload: { team: 2, answer: null },
-                          });
-                        } else if (team2Answer === null) {
-                          handleOptionSelect(index);
-                        }
-                      }
-                    }}
+                    onClick={
+                      !isOptionsAudioFinished
+                        ? () => {}
+                        : () => {
+                            if (showingAnswer) return;
+
+                            if (activeTeam === 1) {
+                              if (team1Answer === index) {
+                                dispatch({
+                                  type: "SET_TEAM_ANSWER",
+                                  payload: { team: 1, answer: null },
+                                });
+                              } else if (team1Answer === null) {
+                                handleOptionSelect(index);
+                                setActiveTeam(2);
+                              }
+                            } else if (activeTeam === 2) {
+                              if (team2Answer === index) {
+                                dispatch({
+                                  type: "SET_TEAM_ANSWER",
+                                  payload: { team: 2, answer: null },
+                                });
+                              } else if (team2Answer === null) {
+                                handleOptionSelect(index);
+                              }
+                            }
+                          }
+                    }
+                    disabled={!isOptionsAudioFinished}
                   >
                     {index + 1}. {option.title}
                   </Option>

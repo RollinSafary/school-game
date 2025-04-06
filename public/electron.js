@@ -35,13 +35,10 @@ function createWindow() {
   if (isDev) {
     // Check if file exists in production
     const filePath = path.join(__dirname, "../build/index.html");
-    console.log("Index path exists:", fs.existsSync(filePath));
 
     // Check if audio directories exist
     const speechDir = path.join(__dirname, "../build/speech");
     const musicDir = path.join(__dirname, "../build/music");
-    console.log("Speech directory exists:", fs.existsSync(speechDir));
-    console.log("Music directory exists:", fs.existsSync(musicDir));
 
     // Debug loading issues
     mainWindow.webContents.on(

@@ -145,7 +145,7 @@ const QuestionDisplay: React.FC = () => {
         // Start timer after all audio has played
         dispatch({ type: "START_TIMER" });
       } catch (error) {
-        console.log("Audio playback error:", error);
+        console.error("Audio playback error:", error);
         // Ensure timer starts even if audio fails
         dispatch({ type: "START_TIMER" });
       }

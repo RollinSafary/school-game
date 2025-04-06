@@ -70,6 +70,11 @@ module.exports = {
           to: "music",
           noErrorOnMissing: true,
         },
+        {
+          from: "public/favicon.ico",
+          to: "favicon.ico",
+          noErrorOnMissing: true,
+        },
       ],
     }),
   ],

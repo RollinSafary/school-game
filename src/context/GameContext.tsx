@@ -92,8 +92,11 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       if (!state.currentQuestion) return state;
 
       const isTeam1Correct =
+        state.team1Answer !== null &&
         state.team1Answer === state.currentQuestion.rightAnswerIndex;
+
       const isTeam2Correct =
+        state.team2Answer !== null &&
         state.team2Answer === state.currentQuestion.rightAnswerIndex;
 
       return {
