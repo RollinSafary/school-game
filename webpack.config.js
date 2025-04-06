@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
-    publicPath: "/",
+    publicPath: "./",
     clean: true,
   },
   module: {
@@ -58,6 +58,16 @@ module.exports = {
         {
           from: "src/assets",
           to: "assets",
+          noErrorOnMissing: true,
+        },
+        {
+          from: "public/speech",
+          to: "speech",
+          noErrorOnMissing: true,
+        },
+        {
+          from: "public/music",
+          to: "music",
           noErrorOnMissing: true,
         },
       ],

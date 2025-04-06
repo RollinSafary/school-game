@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useGame } from "../context/GameContext";
 import { getAllCategories } from "../utils/questions";
 import { Question } from "../types/questions";
+import { audioManager } from "../utils/AudioManager";
 
 const ListContainer = styled.div`
   display: flex;
@@ -357,57 +358,40 @@ const QuestionList: React.FC = () => {
 
       const playQuestionAudio = async () => {
         try {
-          // Play question audio using the question id and category
-          const questionAudioPath = `/speech/question-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
-          const questionAudio = new Audio(questionAudioPath);
-          await new Promise<void>((resolve) => {
-            questionAudio.onended = () => resolve();
-            questionAudio.onerror = () => resolve();
-            questionAudio.play().catch(() => resolve());
-          });
+          // Play question audio
+          const questionPath = `/speech/question-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+          await audioManager.play(questionPath);
 
-          // Wait a bit between audio files for better user experience
+          // Wait a bit between audio files
           await new Promise((resolve) => setTimeout(resolve, 300));
 
-          // Play combined options audio (all options announced together)
-          const optionsAudioPath = `/speech/options-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
-          const optionsAudio = new Audio(optionsAudioPath);
-          await new Promise<void>((resolve) => {
-            optionsAudio.onended = () => resolve();
-            optionsAudio.onerror = () => resolve();
-            optionsAudio.play().catch(() => resolve());
-          });
+          // Play options audio
+          const optionsPath = `/speech/options-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+          await audioManager.play(optionsPath);
 
           // Mark options audio as finished
           setIsOptionsAudioFinished(true);
 
-          // Only start waiting audio and timer if we're still on this question and no answers yet
-          if (
-            !showingAnswer &&
-            team1Answer === null &&
-            team2Answer === null &&
-            currentQuestionIndex !== -1
-          ) {
-            const audio = new Audio("/music/waiting.mp3");
-            audio.loop = true; // Make it loop continuously
-            audio.play().catch(console.error);
-            setWaitingAudio(audio);
+          // Start background music if appropriate
+          if (!showingAnswer && team1Answer === null && team2Answer === null) {
+            const waitingAudio = await audioManager.preloadAudio(
+              "/music/waiting.mp3"
+            );
+            if (waitingAudio) {
+              waitingAudio.loop = true;
+              await waitingAudio.play();
+              setWaitingAudio(waitingAudio);
+            }
 
-            // Start the timer by dispatching an action
+            // Start timer
             dispatch({ type: "START_TIMER" });
           }
         } catch (error) {
-          console.log("Question audio playback error:", error);
-          // Mark options audio as finished even on error
+          console.error("Audio playback error:", error);
           setIsOptionsAudioFinished(true);
 
-          // Ensure timer starts even if audio fails, but only if no answers yet
-          if (
-            !showingAnswer &&
-            team1Answer === null &&
-            team2Answer === null &&
-            currentQuestionIndex !== -1
-          ) {
+          // Start timer even if audio fails
+          if (!showingAnswer && team1Answer === null && team2Answer === null) {
             dispatch({ type: "START_TIMER" });
           }
         }

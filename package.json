@@ -6,6 +6,7 @@
   "description": "School Quiz Game",
   "author": "School Quiz Game Team",
   "dependencies": {
+    "electron-is-dev": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.1.8"
@@ -106,7 +107,6 @@
     "electron": "^28.1.4",
     "electron-builder": "^24.9.1",
     "electron-icon-maker": "^2.0.1",
-    "electron-is-dev": "^2.0.0",
     "html-webpack-plugin": "^5.6.0",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
