@@ -75,6 +75,10 @@ module.exports = {
           to: "favicon.ico",
           noErrorOnMissing: true,
         },
+        {
+          from: "public/electron.js",
+          to: "electron.js",
+        },
       ],
     }),
   ],

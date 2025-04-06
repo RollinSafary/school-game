@@ -1,14 +1,19 @@
-// SimplifiedAudioManager.js
+// SimplifiedAudioManager.ts
 
 // A very simple audio player that only allows one sound at a time
 class SimplifiedAudioManager {
+  private currentAudio: HTMLAudioElement | null;
+  private isPlaying: boolean;
+  private isDev: boolean;
+
   constructor() {
     this.currentAudio = null;
     this.isPlaying = false;
+    this.isDev = process.env.NODE_ENV === "development";
   }
 
   // Stop any currently playing audio
-  stopAll() {
+  stopAll(): void {
     if (this.currentAudio) {
       this.currentAudio.pause();
       this.currentAudio.currentTime = 0;
@@ -17,15 +22,27 @@ class SimplifiedAudioManager {
     }
   }
 
+  // Normalize path for cross-platform compatibility
+  normalizePath(path: string): string {
+    // Ensure path starts with ./ in production but not in development
+    if (path.startsWith("/")) {
+      return this.isDev ? path : `.${path}`;
+    }
+    return path;
+  }
+
   // Play a sound file
-  play(path) {
+  play(path: string): Promise<void> {
     // First stop any current playback
     this.stopAll();
 
-    return new Promise((resolve, reject) => {
+    // Normalize the path for cross-platform compatibility
+    const normalizedPath = this.normalizePath(path);
+
+    return new Promise<void>((resolve, reject) => {
       try {
         // Create a new audio element each time to avoid state issues
-        const audio = new Audio(path);
+        const audio = new Audio(normalizedPath);
 
         // Set up listeners before playing
         audio.addEventListener(
@@ -40,8 +57,8 @@ class SimplifiedAudioManager {
 
         audio.addEventListener(
           "error",
-          (e) => {
-            console.error(`Error playing ${path}:`, e);
+          (e: Event) => {
+            console.error(`Error playing ${normalizedPath}:`, e);
             this.isPlaying = false;
             this.currentAudio = null;
             reject(e);
@@ -54,13 +71,13 @@ class SimplifiedAudioManager {
         this.isPlaying = true;
 
         audio.play().catch((err) => {
-          console.error(`Error playing ${path}:`, err);
+          console.error(`Error playing ${normalizedPath}:`, err);
           this.isPlaying = false;
           this.currentAudio = null;
           reject(err);
         });
       } catch (err) {
-        console.error(`Error setting up audio for ${path}:`, err);
+        console.error(`Error setting up audio for ${normalizedPath}:`, err);
         this.isPlaying = false;
         this.currentAudio = null;
         reject(err);
