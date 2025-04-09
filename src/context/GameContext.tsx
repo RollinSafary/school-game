@@ -1,57 +1,74 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { Question } from "../types/questions";
-import { getShuffledQuestions } from "../utils/questions";
+import {
+  getShuffledQuestions,
+  reloadQuestions,
+  isQuestionsDataLoaded,
+} from "../utils/questions";
 
 interface GameState {
-  questions: Question[];
-  currentQuestionIndex: number;
-  currentQuestion: Question | null;
-  team1Score: number;
-  team2Score: number;
-  team1Answer: number | null;
-  team2Answer: number | null;
+  isLoading: boolean;
   isGameActive: boolean;
-  timer: number;
-  timerActive: boolean;
+  questions: Question[];
   usedQuestions: Set<number>;
   questionSelections: Map<number, 1 | 2>;
+  currentQuestionIndex: number;
+  currentQuestion: Question | null;
+  team1Answer: number | null;
+  team2Answer: number | null;
+  team1Score: number;
+  team2Score: number;
+  timer: number;
+  timerActive: boolean;
 }
 
 type GameAction =
   | { type: "START_GAME" }
+  | { type: "QUESTIONS_LOADED"; payload: Question[] }
   | { type: "SELECT_QUESTION"; payload: { index: number; team: 1 | 2 } }
   | { type: "SET_TEAM_ANSWER"; payload: { team: 1 | 2; answer: number | null } }
   | { type: "CHECK_ANSWERS" }
   | { type: "NEXT_QUESTION" }
   | { type: "END_GAME" }
   | { type: "TICK_TIMER" }
-  | { type: "START_TIMER" };
+  | { type: "START_TIMER" }
+  | { type: "STOP_TIMER" };
+
+const timer = 60;
 
 const initialState: GameState = {
-  questions: [],
-  currentQuestionIndex: -1,
-  currentQuestion: null,
-  team1Score: 0,
-  team2Score: 0,
-  team1Answer: null,
-  team2Answer: null,
+  isLoading: true,
   isGameActive: false,
-  timer: 60,
-  timerActive: false,
+  questions: [],
   usedQuestions: new Set<number>(),
   questionSelections: new Map<number, 1 | 2>(),
+  currentQuestionIndex: -1,
+  currentQuestion: null,
+  team1Answer: null,
+  team2Answer: null,
+  team1Score: 0,
+  team2Score: 0,
+  timer: timer,
+  timerActive: false,
 };
 
 const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case "START_GAME": {
-      const shuffledQuestions = getShuffledQuestions();
       return {
         ...initialState,
-        questions: shuffledQuestions,
+        isLoading: false,
         isGameActive: true,
+        questions: state.questions,
       };
     }
+
+    case "QUESTIONS_LOADED":
+      return {
+        ...state,
+        isLoading: false,
+        questions: action.payload,
+      };
 
     case "SELECT_QUESTION": {
       const { index, team } = action.payload;
@@ -69,7 +86,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         currentQuestion: state.questions[index],
         team1Answer: null,
         team2Answer: null,
-        timer: 60,
+        timer: timer,
         timerActive: false,
         usedQuestions: newUsedQuestions,
         questionSelections: newQuestionSelections,
@@ -112,7 +129,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         currentQuestion: null,
         team1Answer: null,
         team2Answer: null,
-        timer: 60,
+        timer: timer,
         timerActive: false,
       };
 
@@ -126,6 +143,12 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       return {
         ...state,
         timer: state.timer > 0 ? state.timer - 1 : 0,
+      };
+
+    case "STOP_TIMER":
+      return {
+        ...state,
+        timerActive: false,
       };
 
     default:
@@ -157,11 +180,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       timerInterval = setInterval(() => {
         dispatch({ type: "TICK_TIMER" });
       }, 1000);
-    } else if (state.timer === 0 && state.currentQuestion) {
-      dispatch({ type: "CHECK_ANSWERS" });
-      setTimeout(() => {
-        dispatch({ type: "NEXT_QUESTION" });
-      }, 2000);
     }
 
     return () => {
@@ -175,6 +193,28 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     state.timer,
     state.timerActive,
   ]);
+
+  useEffect(() => {
+    const loadQuestionsData = async () => {
+      if (isQuestionsDataLoaded()) {
+        dispatch({
+          type: "QUESTIONS_LOADED",
+          payload: getShuffledQuestions(),
+        });
+        return;
+      }
+
+      const isLoaded = await reloadQuestions();
+      if (isLoaded) {
+        dispatch({
+          type: "QUESTIONS_LOADED",
+          payload: getShuffledQuestions(),
+        });
+      }
+    };
+
+    loadQuestionsData();
+  }, []);
 
   return (
     <GameContext.Provider value={{ state, dispatch }}>

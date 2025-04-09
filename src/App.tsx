@@ -39,11 +39,21 @@ const StartButton = styled.button`
 
 const App: React.FC = () => {
   const { state, dispatch } = useGame();
-  const { isGameActive } = state;
+  const { isGameActive, isLoading } = state;
 
   const handleStartGame = () => {
     dispatch({ type: "START_GAME" });
   };
+
+  if (isLoading) {
+    return (
+      <AppContainer>
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          Loading game data...
+        </div>
+      </AppContainer>
+    );
+  }
 
   if (!isGameActive) {
     return (

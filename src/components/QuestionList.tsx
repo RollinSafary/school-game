@@ -331,7 +331,7 @@ const QuestionList: React.FC = () => {
   const handleOptionSelect = (optionIndex: number) => {
     dispatch({
       type: "SET_TEAM_ANSWER",
-      payload: { team: activeTeam, answer: optionIndex },
+      payload: { team: activeTeam as 1 | 2, answer: optionIndex },
     });
   };
 
@@ -344,13 +344,26 @@ const QuestionList: React.FC = () => {
         !showingAnswer &&
         currentQuestion
       ) {
+        // Stop background music immediately when Enter is pressed
+        stopBackgroundMusic();
+
+        // Stop the timer by dispatching a state change
+        dispatch({ type: "STOP_TIMER" });
+
+        // Then proceed with answer sequence
         playAnswerSequence();
       }
     };
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [readyToShowAnswer, showingAnswer, currentQuestion]);
+  }, [
+    readyToShowAnswer,
+    showingAnswer,
+    currentQuestion,
+    stopBackgroundMusic,
+    dispatch,
+  ]);
 
   // Modify the useEffect that sets readyToShowAnswer
   React.useEffect(() => {
@@ -437,6 +450,9 @@ const QuestionList: React.FC = () => {
 
     // Stop waiting audio if it's playing
     stopBackgroundMusic();
+
+    // Ensure timer is stopped
+    dispatch({ type: "STOP_TIMER" });
 
     setShowingAnswer(true);
     setReadyToShowAnswer(false);
@@ -582,6 +598,95 @@ const QuestionList: React.FC = () => {
     };
   }, []);
 
+  // Add a new effect to monitor timer and play no-answer when timer reaches 0
+  React.useEffect(() => {
+    // Only check when we have a current question and timer just reached 0
+    if (currentQuestion && state.timer === 0 && !showingAnswer) {
+      const handleTimerEnd = async () => {
+        try {
+          // Stop background music
+          stopBackgroundMusic();
+
+          // Ensure timer is stopped
+          dispatch({ type: "STOP_TIMER" });
+
+          // Set showing answer state
+          setShowingAnswer(true);
+          setReadyToShowAnswer(false);
+
+          console.log("Timer reached zero. Starting audio sequence...");
+
+          // First play the correct answer audio
+          const rightAnswerAudioPath = `/speech/right-answer-${currentQuestion.categoryId}-${currentQuestion.id}.wav`;
+          console.log("Playing right answer audio first...");
+          await simpleAudioManager.play(rightAnswerAudioPath);
+          console.log("Right answer audio completed");
+
+          // Then play the no-answer audio
+          console.log("Playing no-answer audio...");
+          await simpleAudioManager.play("/speech/no-answer.wav");
+          console.log("No-answer audio completed");
+
+          // Update scores (even though no answers were selected)
+          dispatch({ type: "CHECK_ANSWERS" });
+
+          // Add a longer delay after all audio completes
+          console.log(
+            "Waiting for 3 seconds before moving to next question..."
+          );
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          console.log("Wait completed. Resetting state...");
+
+          // Reset states
+          setShowingAnswer(false);
+          setActiveTeam(activeTeam === 1 ? 2 : 1);
+          setSelectingTeam((prev) => (prev === 1 ? 2 : 1));
+
+          // Reset correctness state and ref (same as in playAnswerSequence)
+          setTeam1AnsweredCorrectly(null);
+          setTeam2AnsweredCorrectly(null);
+          correctAnswersRef.current.team1Correct = null;
+          correctAnswersRef.current.team2Correct = null;
+
+          console.log("Moving to question list...");
+          // Move to the next question
+          dispatch({ type: "NEXT_QUESTION" });
+        } catch (error) {
+          console.error("Error playing audio sequence:", error);
+
+          // Wait even if there's an error
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+
+          // Reset states
+          setShowingAnswer(false);
+          setActiveTeam(activeTeam === 1 ? 2 : 1);
+          setSelectingTeam((prev) => (prev === 1 ? 2 : 1));
+
+          // Reset correctness state and ref
+          setTeam1AnsweredCorrectly(null);
+          setTeam2AnsweredCorrectly(null);
+          correctAnswersRef.current.team1Correct = null;
+          correctAnswersRef.current.team2Correct = null;
+
+          // Move to the next question
+          dispatch({ type: "NEXT_QUESTION" });
+        }
+      };
+
+      // Use async IIFE to ensure the audio sequence completes
+      (async () => {
+        await handleTimerEnd();
+      })();
+    }
+  }, [
+    state.timer,
+    currentQuestion,
+    showingAnswer,
+    stopBackgroundMusic,
+    dispatch,
+    activeTeam, // Added dependency to fix the lint error
+  ]);
+
   return (
     <>
       {isGameCompleted ? (
@@ -637,7 +742,7 @@ const QuestionList: React.FC = () => {
 
                       dispatch({
                         type: "SELECT_QUESTION",
-                        payload: { index, team: selectingTeam },
+                        payload: { index, team: selectingTeam as 1 | 2 },
                       });
                     }
                   }}
@@ -698,7 +803,7 @@ const QuestionList: React.FC = () => {
                                 });
                               } else if (team1Answer === null) {
                                 handleOptionSelect(index);
-                                setActiveTeam(2);
+                                setActiveTeam(activeTeam === 1 ? 2 : 1);
                               }
                             } else if (activeTeam === 2) {
                               if (team2Answer === index) {
@@ -709,6 +814,7 @@ const QuestionList: React.FC = () => {
                               } else if (team2Answer === null) {
                                 handleOptionSelect(index);
                               }
+                              setActiveTeam(activeTeam === 2 ? 1 : 2);
                             }
                           }
                     }
