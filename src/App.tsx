@@ -28,6 +28,33 @@ const StartScreen = styled.div`
   justify-content: center;
   gap: 20px;
   height: 100%;
+  padding: 20px;
+`;
+
+const GameRules = styled.div`
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const RuleTitle = styled.h2`
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+`;
+
+const RulesList = styled.ul`
+  margin: 0;
+  padding-left: 20px;
+
+  li {
+    margin-bottom: 10px;
+  }
 `;
 
 const StartButton = styled.button`
@@ -97,7 +124,7 @@ const App: React.FC = () => {
     return (
       <AppContainer>
         <div style={{ textAlign: "center", padding: "20px" }}>
-          Loading game data...
+          Խաղի տվյալները բեռնվում են...
         </div>
       </AppContainer>
     );
@@ -107,8 +134,26 @@ const App: React.FC = () => {
     return (
       <AppContainer>
         <StartScreen>
+          <GameRules>
+            <RuleTitle>Խաղի կանոններ</RuleTitle>
+            <RulesList>
+              <li>Թիմերը հերթով ընտրում են հարցեր</li>
+              <li>
+                Յուրաքանչյուր թիմ ստանում է միավորներ ճիշտ պատասխանների համար
+              </li>
+              <li>
+                Խաղն ավարտվում է <strong>{questionsLimit}</strong> հարցերից հետո
+                կամ երբ բոլոր հարցերն օգտագործված են
+              </li>
+              <li>
+                Եթե {questionsLimit} հարցերից հետո հաշիվը հավասար է, կխաղացվեն
+                բոնուսային հարցեր՝ մինչև հաղթողի որոշումը կամ բոլոր հարցերի
+                սպառումը
+              </li>
+            </RulesList>
+          </GameRules>
           <InputContainer>
-            <Label>Maximum Questions:</Label>
+            <Label>Առավելագույն հարցերի քանակ:</Label>
             <NumberInput
               type="number"
               min="1"

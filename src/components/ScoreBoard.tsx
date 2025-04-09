@@ -73,6 +73,29 @@ const ProgressBarFill = styled.div<{ percentage: number }>`
   transition: width 0.3s ease;
 `;
 
+const BonusQuestionsIndicator = styled.div`
+  background-color: #ff9800;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+  margin-left: 10px;
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.7;
+    }
+  }
+`;
+
 const ScoreBoard: React.FC = () => {
   const { state } = useGame();
   const { team1Score, team2Score, usedQuestions, maxQuestions } = state;
@@ -82,6 +105,10 @@ const ScoreBoard: React.FC = () => {
     (usedQuestions.size / maxQuestions) * 100,
     100
   );
+
+  // Check if we're in the bonus questions phase
+  const isBonusPhase =
+    usedQuestions.size > maxQuestions && team1Score === team2Score;
 
   return (
     <ScoreContainer>
@@ -97,9 +124,14 @@ const ScoreBoard: React.FC = () => {
       </TeamsContainer>
 
       <GameStatusBar>
-        <QuestionCounter>
-          Questions: {usedQuestions.size} / {maxQuestions}
-        </QuestionCounter>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <QuestionCounter>
+            Հարցեր: {usedQuestions.size} / {maxQuestions}
+          </QuestionCounter>
+          {isBonusPhase && (
+            <BonusQuestionsIndicator>ՀԱՎԵԼՅԱԼ ՀԱՐՑԵՐ</BonusQuestionsIndicator>
+          )}
+        </div>
         <ProgressBarContainer>
           <ProgressBarFill percentage={progressPercentage} />
         </ProgressBarContainer>

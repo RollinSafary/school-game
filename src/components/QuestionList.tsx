@@ -315,6 +315,9 @@ const QuestionList: React.FC = () => {
     team2Correct: null as boolean | null,
   });
 
+  // Track if bonus questions audio has been played
+  const [hasBonusAudioPlayed, setHasBonusAudioPlayed] = React.useState(false);
+
   // Handle waiting audio playback and cleanup
   const stopBackgroundMusic = React.useCallback(() => {
     if (waitingAudio) {
@@ -526,14 +529,128 @@ const QuestionList: React.FC = () => {
   const shouldShowQuestionGrid = currentQuestionIndex === -1;
 
   // Check if game should be completed based on maxQuestions count
+
   const isGameCompleted =
-    (usedQuestions.size >= state.maxQuestions && team1Score !== team2Score) ||
-    (usedQuestions.size === questions.length &&
-      questions.length > 0 &&
-      currentQuestionIndex === -1 &&
-      team1Answer === null &&
-      team2Answer === null &&
-      !showingAnswer);
+    currentQuestionIndex === -1 &&
+    // Only end the game if one team is winning or all questions are used
+    ((usedQuestions.size >= state.maxQuestions && team1Score !== team2Score) ||
+      (usedQuestions.size === questions.length &&
+        questions.length > 0 &&
+        team1Answer === null &&
+        team2Answer === null &&
+        !showingAnswer));
+
+  // Add a useEffect to monitor for max questions reached with a tie
+  React.useEffect(() => {
+    // Skip if not in the question grid view, or if game is completed
+    if (!shouldShowQuestionGrid || isGameCompleted) return;
+
+    // Check if we've reached maxQuestions but have a tie and bonus audio hasn't been played yet
+    if (
+      usedQuestions.size >= state.maxQuestions &&
+      team1Score === team2Score &&
+      questions.length > usedQuestions.size &&
+      !hasBonusAudioPlayed
+    ) {
+      // Play bonus questions audio
+      const playBonusQuestionsAudio = async () => {
+        try {
+          // Stop any existing audio
+          simpleAudioManager.stopAll();
+
+          // Mark team selection audio as not played yet (we'll play it after bonus audio)
+          setHasPlayedTeamSelectionAudio(false);
+
+          console.log(
+            "Scores tied at max questions - playing bonus questions audio"
+          );
+          await simpleAudioManager.play("/speech/bonus-questions.wav");
+          console.log("Bonus questions audio completed");
+
+          // Mark bonus audio as played so it doesn't trigger again
+          setHasBonusAudioPlayed(true);
+
+          // Now we can allow team selection audio to play in its own effect
+        } catch (error) {
+          console.error("Bonus questions audio playback error:", error);
+          // Even if there's an error, mark as played to prevent retries
+          setHasBonusAudioPlayed(true);
+        }
+      };
+
+      playBonusQuestionsAudio();
+    }
+  }, [
+    usedQuestions.size,
+    team1Score,
+    team2Score,
+    state.maxQuestions,
+    shouldShowQuestionGrid,
+    isGameCompleted,
+    questions.length,
+    hasBonusAudioPlayed,
+  ]);
+
+  // Reset bonus audio flag when we're no longer in the bonus phase
+  React.useEffect(() => {
+    if (usedQuestions.size < state.maxQuestions || team1Score !== team2Score) {
+      setHasBonusAudioPlayed(false);
+    }
+  }, [usedQuestions.size, state.maxQuestions, team1Score, team2Score]);
+
+  // Add this effect for team selection audio specifically
+  React.useEffect(() => {
+    // Only play when:
+    // 1. We're in question selection view
+    // 2. Audio hasn't been played yet for this selection
+    // 3. Game isn't completed
+    // 4. If we're in bonus phase, make sure bonus audio has played first
+    const isBonusPhase =
+      usedQuestions.size >= state.maxQuestions && team1Score === team2Score;
+    const shouldPlaySelectionAudio =
+      shouldShowQuestionGrid &&
+      !hasPlayedTeamSelectionAudio &&
+      !isGameCompleted &&
+      (!isBonusPhase || (isBonusPhase && hasBonusAudioPlayed));
+
+    if (shouldPlaySelectionAudio) {
+      const playTeamSelectionAudio = async () => {
+        try {
+          const audioPath = `/speech/select-question-team-${selectingTeam}.wav`;
+
+          // Stop any existing audio first
+          simpleAudioManager.stopAll();
+
+          console.log(`Playing team selection audio for team ${selectingTeam}`);
+          // Play the new audio and mark as played
+          await simpleAudioManager.play(audioPath);
+          console.log("Team selection audio completed");
+          setHasPlayedTeamSelectionAudio(true);
+        } catch (error) {
+          console.error("Team selection audio playback error:", error);
+          // Even if there's an error, mark as played to prevent retries
+          setHasPlayedTeamSelectionAudio(true);
+        }
+      };
+
+      playTeamSelectionAudio();
+    }
+
+    // Reset the flag when we leave question grid view
+    if (!shouldShowQuestionGrid) {
+      setHasPlayedTeamSelectionAudio(false);
+    }
+  }, [
+    shouldShowQuestionGrid,
+    selectingTeam,
+    hasPlayedTeamSelectionAudio,
+    isGameCompleted,
+    usedQuestions.size,
+    state.maxQuestions,
+    team1Score,
+    team2Score,
+    hasBonusAudioPlayed,
+  ]);
 
   // Play final results audio
   React.useEffect(() => {
@@ -555,48 +672,6 @@ const QuestionList: React.FC = () => {
       playFinalAudio();
     }
   }, [isGameCompleted, team1Score, team2Score]);
-
-  // Add this effect for team selection audio specifically
-  React.useEffect(() => {
-    // Only play when:
-    // 1. We're in question selection view
-    // 2. Audio hasn't been played yet for this selection
-    // 3. Game isn't completed
-    if (
-      shouldShowQuestionGrid &&
-      !hasPlayedTeamSelectionAudio &&
-      !isGameCompleted
-    ) {
-      const playTeamSelectionAudio = async () => {
-        try {
-          const audioPath = `/speech/select-question-team-${selectingTeam}.wav`;
-
-          // Stop any existing audio first
-          simpleAudioManager.stopAll();
-
-          // Play the new audio and mark as played
-          await simpleAudioManager.play(audioPath);
-          setHasPlayedTeamSelectionAudio(true);
-        } catch (error) {
-          console.error("Team selection audio playback error:", error);
-          // Even if there's an error, mark as played to prevent retries
-          setHasPlayedTeamSelectionAudio(true);
-        }
-      };
-
-      playTeamSelectionAudio();
-    }
-
-    // Reset the flag when we leave question grid view
-    if (!shouldShowQuestionGrid) {
-      setHasPlayedTeamSelectionAudio(false);
-    }
-  }, [
-    shouldShowQuestionGrid,
-    selectingTeam,
-    hasPlayedTeamSelectionAudio,
-    isGameCompleted,
-  ]);
 
   // Add a cleanup effect to stop audio when unmounting
   React.useEffect(() => {
@@ -699,8 +774,15 @@ const QuestionList: React.FC = () => {
     // Skip if we're already in the completed state or showing an answer
     if (isGameCompleted || showingAnswer || currentQuestionIndex !== -1) return;
 
-    // Check if we've reached maxQuestions and have a winner
-    if (usedQuestions.size >= state.maxQuestions && team1Score !== team2Score) {
+    // Only play winner audio when:
+    // 1. We've reached maxQuestions and have a winner (not tied)
+    // 2. OR we've used all questions and have a winner
+    const hasWinner = team1Score !== team2Score;
+    const maxQuestionsReached = usedQuestions.size >= state.maxQuestions;
+    const allQuestionsUsed =
+      usedQuestions.size === questions.length && questions.length > 0;
+
+    if ((maxQuestionsReached || allQuestionsUsed) && hasWinner) {
       // Play the appropriate win audio
       const playWinnerAudio = async () => {
         try {
@@ -724,6 +806,7 @@ const QuestionList: React.FC = () => {
     isGameCompleted,
     showingAnswer,
     currentQuestionIndex,
+    questions.length,
   ]);
 
   return (
@@ -731,6 +814,16 @@ const QuestionList: React.FC = () => {
       {isGameCompleted ? (
         <FinalView>
           <h1>Խաղն ավարտվեց!</h1>
+          {usedQuestions.size >= state.maxQuestions && (
+            <h3>
+              {team1Score === team2Score
+                ? "Բոլոր հարցերն օգտագործվել են"
+                : `Հասել է ${state.maxQuestions} հարցերի սահմանին`}
+              {usedQuestions.size > state.maxQuestions &&
+                team1Score !== team2Score &&
+                " (Հավասարությունը լուծվել է բոնուսային հարցերով)"}
+            </h3>
+          )}
           <h2>Վերջնական հաշիվ</h2>
           <ScoreDisplay>
             <TeamScore isTeam1>
@@ -761,7 +854,7 @@ const QuestionList: React.FC = () => {
             {selectingTeam === 1 ? "Թիմ 1-ը" : "Թիմ 2-ը"} ընտրում է հարցը
           </SelectingTeamMessage>
           <QuestionCountDisplay>
-            Questions: {usedQuestions.size} / {state.maxQuestions}
+            Հարցեր: {usedQuestions.size} / {state.maxQuestions}
           </QuestionCountDisplay>
           <ListContainer>
             <QuestionGrid>
