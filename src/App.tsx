@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useGame } from "./context/GameContext";
 import QuestionList from "./components/QuestionList";
@@ -21,6 +21,15 @@ const GameArea = styled.div`
   flex: 1;
 `;
 
+const StartScreen = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 100%;
+`;
+
 const StartButton = styled.button`
   padding: 20px;
   font-size: 1.5rem;
@@ -30,6 +39,7 @@ const StartButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 300px;
 
   &:hover {
     background-color: #45a049;
@@ -37,12 +47,50 @@ const StartButton = styled.button`
   }
 `;
 
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  font-size: 1.2rem;
+  color: #333;
+`;
+
+const NumberInput = styled.input`
+  padding: 12px;
+  font-size: 1.2rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  width: 120px;
+  text-align: center;
+  &:focus {
+    outline: none;
+    border-color: #4caf50;
+  }
+`;
+
 const App: React.FC = () => {
   const { state, dispatch } = useGame();
-  const { isGameActive, isLoading } = state;
+  const { isGameActive, isLoading, maxQuestions } = state;
+  const [questionsLimit, setQuestionsLimit] = useState(maxQuestions);
 
   const handleStartGame = () => {
+    // Set the max questions first
+    dispatch({ type: "SET_MAX_QUESTIONS", payload: questionsLimit });
+    // Then start the game
     dispatch({ type: "START_GAME" });
+  };
+
+  const handleQuestionsLimitChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value) && value > 0) {
+      setQuestionsLimit(value);
+    }
   };
 
   if (isLoading) {
@@ -58,7 +106,18 @@ const App: React.FC = () => {
   if (!isGameActive) {
     return (
       <AppContainer>
-        <StartButton onClick={handleStartGame}>Սկսել Խաղը</StartButton>
+        <StartScreen>
+          <InputContainer>
+            <Label>Maximum Questions:</Label>
+            <NumberInput
+              type="number"
+              min="1"
+              value={questionsLimit}
+              onChange={handleQuestionsLimitChange}
+            />
+          </InputContainer>
+          <StartButton onClick={handleStartGame}>Սկսել Խաղը</StartButton>
+        </StartScreen>
       </AppContainer>
     );
   }

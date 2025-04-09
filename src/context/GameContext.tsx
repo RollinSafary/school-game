@@ -20,6 +20,7 @@ interface GameState {
   team2Score: number;
   timer: number;
   timerActive: boolean;
+  maxQuestions: number;
 }
 
 type GameAction =
@@ -32,7 +33,8 @@ type GameAction =
   | { type: "END_GAME" }
   | { type: "TICK_TIMER" }
   | { type: "START_TIMER" }
-  | { type: "STOP_TIMER" };
+  | { type: "STOP_TIMER" }
+  | { type: "SET_MAX_QUESTIONS"; payload: number };
 
 const timer = 60;
 
@@ -50,6 +52,7 @@ const initialState: GameState = {
   team2Score: 0,
   timer: timer,
   timerActive: false,
+  maxQuestions: 20,
 };
 
 const gameReducer = (state: GameState, action: GameAction): GameState => {
@@ -60,6 +63,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         isLoading: false,
         isGameActive: true,
         questions: state.questions,
+        maxQuestions: state.maxQuestions,
       };
     }
 
@@ -149,6 +153,12 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       return {
         ...state,
         timerActive: false,
+      };
+
+    case "SET_MAX_QUESTIONS":
+      return {
+        ...state,
+        maxQuestions: action.payload,
       };
 
     default:

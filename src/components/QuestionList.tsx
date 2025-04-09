@@ -269,6 +269,14 @@ const NewGameButton = styled.button`
   }
 `;
 
+const QuestionCountDisplay = styled.div`
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: #555;
+  font-weight: bold;
+`;
+
 const QuestionList: React.FC = () => {
   const { state, dispatch } = useGame();
   const {
@@ -517,13 +525,15 @@ const QuestionList: React.FC = () => {
   // Show question grid only when no question is selected
   const shouldShowQuestionGrid = currentQuestionIndex === -1;
 
+  // Check if game should be completed based on maxQuestions count
   const isGameCompleted =
-    usedQuestions.size === questions.length &&
-    questions.length > 0 &&
-    currentQuestionIndex === -1 &&
-    team1Answer === null &&
-    team2Answer === null &&
-    !showingAnswer;
+    (usedQuestions.size >= state.maxQuestions && team1Score !== team2Score) ||
+    (usedQuestions.size === questions.length &&
+      questions.length > 0 &&
+      currentQuestionIndex === -1 &&
+      team1Answer === null &&
+      team2Answer === null &&
+      !showingAnswer);
 
   // Play final results audio
   React.useEffect(() => {
@@ -531,14 +541,11 @@ const QuestionList: React.FC = () => {
       const playFinalAudio = async () => {
         try {
           if (team1Score > team2Score) {
-            const audio = new Audio("/speech/team-1-wins.wav");
-            await audio.play();
+            await simpleAudioManager.play("/speech/team-1-wins.wav");
           } else if (team2Score > team1Score) {
-            const audio = new Audio("/speech/team-2-wins.wav");
-            await audio.play();
+            await simpleAudioManager.play("/speech/team-2-wins.wav");
           } else {
-            const audio = new Audio("/speech/draw.wav");
-            await audio.play();
+            await simpleAudioManager.play("/speech/draw.wav");
           }
         } catch (error) {
           console.error("Final results audio playback error:", error);
@@ -687,6 +694,38 @@ const QuestionList: React.FC = () => {
     activeTeam, // Added dependency to fix the lint error
   ]);
 
+  // Add a useEffect to monitor for game completion
+  React.useEffect(() => {
+    // Skip if we're already in the completed state or showing an answer
+    if (isGameCompleted || showingAnswer || currentQuestionIndex !== -1) return;
+
+    // Check if we've reached maxQuestions and have a winner
+    if (usedQuestions.size >= state.maxQuestions && team1Score !== team2Score) {
+      // Play the appropriate win audio
+      const playWinnerAudio = async () => {
+        try {
+          if (team1Score > team2Score) {
+            await simpleAudioManager.play("/speech/team-1-wins.wav");
+          } else if (team2Score > team1Score) {
+            await simpleAudioManager.play("/speech/team-2-wins.wav");
+          }
+        } catch (error) {
+          console.error("Winner audio playback error:", error);
+        }
+      };
+
+      playWinnerAudio();
+    }
+  }, [
+    usedQuestions.size,
+    team1Score,
+    team2Score,
+    state.maxQuestions,
+    isGameCompleted,
+    showingAnswer,
+    currentQuestionIndex,
+  ]);
+
   return (
     <>
       {isGameCompleted ? (
@@ -721,6 +760,9 @@ const QuestionList: React.FC = () => {
           >
             {selectingTeam === 1 ? "Թիմ 1-ը" : "Թիմ 2-ը"} ընտրում է հարցը
           </SelectingTeamMessage>
+          <QuestionCountDisplay>
+            Questions: {usedQuestions.size} / {state.maxQuestions}
+          </QuestionCountDisplay>
           <ListContainer>
             <QuestionGrid>
               {questions.map((question, index) => (
