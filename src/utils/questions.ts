@@ -17,7 +17,7 @@ let isDataLoaded = false;
 // Load questions data from the public folder
 const loadQuestionsData = async (): Promise<void> => {
   try {
-    const response = await fetch("/questions.json");
+    const response = await fetch("./questions.json");
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
